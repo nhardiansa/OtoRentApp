@@ -21,6 +21,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontWeight: 'bold',
     color: 'white',
-    fontFamily: 'Nunito',
+    fontFamily: fontFamily.primary,
   },
 });

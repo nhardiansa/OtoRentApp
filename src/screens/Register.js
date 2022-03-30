@@ -1,38 +1,43 @@
+import React from 'react';
 import {
   View,
   Text,
+  ImageBackground,
   StyleSheet,
   SafeAreaView,
-  ImageBackground,
 } from 'react-native';
-import React from 'react';
+
+import CustomButton from '../components/CustomButton';
 import CustomTextInput from '../components/CustomTextInput';
 
-import {LOGIN_BG} from '../assets/images';
 import {colors, fontSize} from '../helpers/styleConstants';
-import CustomButton from '../components/CustomButton';
+import {REGISTER_BG} from '../assets/images';
 
-export default function Login() {
-  const signUpClicked = () => {
-    console.log('sign up clicked');
+export default function Register() {
+  const loginClicked = () => {
+    console.log('login clicked');
   };
 
   return (
     <ImageBackground
-      source={LOGIN_BG}
+      source={REGISTER_BG}
       resizeMode={'cover'}
       style={styles.image}>
       <SafeAreaView style={styles.container}>
-        <Text style={styles.heading}>LET’S EXPLORE THE WORLD</Text>
+        <Text style={styles.heading}>LET’S HAVE SOME RIDE</Text>
         <View>
-          <CustomTextInput placeholder="Username" />
-          <CustomTextInput style={styles.input} placeholder="Password" />
-          <Text style={styles.link}>Forgot Password</Text>
-          <CustomButton styleContainer={styles.button}>Login</CustomButton>
+          <CustomTextInput placeholder="Email" />
+          <CustomTextInput style={styles.input} placeholder="Mobile Phone" />
+          <CustomTextInput
+            secureTextEntry={true}
+            style={styles.input}
+            placeholder="Password"
+          />
+          <CustomButton styleContainer={styles.button}>Register</CustomButton>
           <Text style={styles.text}>
-            Don’t have account?{' '}
-            <Text onPress={signUpClicked} style={styles.register}>
-              Sign up now
+            Already have an account?{' '}
+            <Text onPress={loginClicked} style={styles.register}>
+              Login now
             </Text>
           </Text>
         </View>
@@ -80,7 +85,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   button: {
-    marginTop: 18,
-    marginBottom: 53,
+    marginTop: 32,
+    marginBottom: 44,
   },
 });

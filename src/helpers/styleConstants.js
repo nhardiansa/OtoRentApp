@@ -18,6 +18,6 @@ export const colors = {
 };
 
 export const fontFamily = {
-  nunito: 'Nunito',
-  roboto: 'Roboto',
+  primary: 'Nunito',
+  secondary: 'Roboto',
 };
