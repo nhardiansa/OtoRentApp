@@ -1,6 +1,6 @@
 import {StyleSheet, TextInput} from 'react-native';
 import React from 'react';
-import {fontFamily, fontSize} from '../helpers/styleConstants';
+import {fontFamily, fontSize, fontStyle} from '../helpers/styleConstants';
 
 export default function CustomTextInput({style, ...rest}) {
   return (
@@ -19,8 +19,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(223, 222, 222, 0.3)',
     fontSize: fontSize.md,
     borderRadius: 10,
-    fontWeight: 'bold',
     color: 'white',
-    fontFamily: fontFamily.primary,
+    fontFamily: fontStyle(fontFamily.primary, 'bold'),
   },
 });

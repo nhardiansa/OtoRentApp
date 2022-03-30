@@ -1,6 +1,11 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
-import {colors, fontSize} from '../helpers/styleConstants';
+import {
+  colors,
+  fontFamily,
+  fontSize,
+  fontStyle,
+} from '../helpers/styleConstants';
 
 export default function CustomButton({
   children,
@@ -20,8 +25,7 @@ export default function CustomButton({
       fontSize: fontSize.lg,
       textAlign: 'center',
       color: colors[variantText || 'white'],
-      fontWeight: 'bold',
-      fontFamily: 'Nunito',
+      fontFamily: fontStyle(fontFamily.primary, 'bold'),
     },
   });
 
