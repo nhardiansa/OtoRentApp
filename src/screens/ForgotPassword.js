@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ImageBackground,
   SafeAreaView,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import CustomTextInput from '../components/CustomTextInput';
@@ -18,7 +19,20 @@ import {
 } from '../helpers/styleConstants';
 import {FORGOT_PASSWORD_BG} from '../assets/images';
 
-export default function ForgotPassword() {
+export default function ForgotPassword({navigation}) {
+  const sendEmail = () => {
+    console.log('send email clicked');
+  };
+
+  const reSendEmail = () => {
+    console.log('send email clicked');
+  };
+
+  const goPreviousPage = () => {
+    console.log('back clicked');
+    navigation.goBack();
+  };
+
   return (
     <ImageBackground
       source={FORGOT_PASSWORD_BG}
@@ -30,8 +44,11 @@ export default function ForgotPassword() {
             name="chevron-left"
             size={fontSize.xl}
             color={colors.white}
+            onPress={goPreviousPage}
           />
-          <Text style={[styles.text, styles.backText]}>Back</Text>
+          <Text onPress={goPreviousPage} style={[styles.text, styles.backText]}>
+            Back
+          </Text>
         </View>
         <Text style={styles.heading}>THAT’S OKAY, WE GOT YOUR BACK</Text>
         <View>
@@ -42,8 +59,11 @@ export default function ForgotPassword() {
             style={styles.input}
             placeholder="Enter your email address"
           />
-          <CustomButton styleContainer={styles.button}>Send Code</CustomButton>
+          <CustomButton onPress={sendEmail} styleContainer={styles.button}>
+            Send Code
+          </CustomButton>
           <CustomButton
+            onPress={reSendEmail}
             variant={'secondary'}
             styleText={{color: colors.primary}}>
             Resend Code

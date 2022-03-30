@@ -9,12 +9,28 @@ import React from 'react';
 import CustomTextInput from '../components/CustomTextInput';
 
 import {LOGIN_BG} from '../assets/images';
-import {colors, fontSize} from '../helpers/styleConstants';
+import {
+  colors,
+  fontFamily,
+  fontSize,
+  fontStyle,
+} from '../helpers/styleConstants';
 import CustomButton from '../components/CustomButton';
 
-export default function Login() {
-  const signUpClicked = () => {
+export default function Login({navigation}) {
+  const goToRegister = () => {
     console.log('sign up clicked');
+    navigation.navigate('Register');
+  };
+
+  const goToForgotPassword = () => {
+    console.log('forgot clicked');
+    navigation.navigate('ForgotPassword');
+  };
+
+  const onLogin = () => {
+    console.log('login clicked');
+    navigation.navigate('Home');
   };
 
   return (
@@ -27,11 +43,15 @@ export default function Login() {
         <View>
           <CustomTextInput placeholder="Username" />
           <CustomTextInput style={styles.input} placeholder="Password" />
-          <Text style={styles.link}>Forgot Password</Text>
-          <CustomButton styleContainer={styles.button}>Login</CustomButton>
+          <Text style={styles.link} onPress={goToForgotPassword}>
+            Forgot Password
+          </Text>
+          <CustomButton onPress={onLogin} styleContainer={styles.button}>
+            Login
+          </CustomButton>
           <Text style={styles.text}>
             Don’t have account?{' '}
-            <Text onPress={signUpClicked} style={styles.register}>
+            <Text onPress={goToRegister} style={styles.register}>
               Sign up now
             </Text>
           </Text>
@@ -58,23 +78,26 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     color: colors.white,
     width: '80%',
+    fontFamily: fontStyle(fontFamily.secondary, 'black'),
   },
   text: {
     color: colors.white,
     fontSize: fontSize.sm,
     textAlign: 'center',
+    fontFamily: fontStyle(fontFamily.primary),
   },
   link: {
     color: colors.white,
     fontSize: fontSize.sm,
     textDecorationLine: 'underline',
     marginTop: 10,
+    fontFamily: fontStyle(fontFamily.primary, 'bold'),
   },
   register: {
     color: colors.white,
     fontSize: fontSize.sm,
     textDecorationLine: 'underline',
-    fontWeight: 'bold',
+    fontFamily: fontStyle(fontFamily.primary, 'bold'),
   },
   input: {
     marginTop: 24,
