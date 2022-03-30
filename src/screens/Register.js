@@ -12,16 +12,17 @@ import CustomTextInput from '../components/CustomTextInput';
 
 import {colors, fontSize} from '../helpers/styleConstants';
 import {REGISTER_BG} from '../assets/images';
+import {LOGIN_SCREEN} from '../helpers/destinationConstants';
 
 export default function Register({navigation}) {
   const onRegister = () => {
     console.log('got to clicked');
-    navigation.navigate('Login');
+    navigation.navigate(LOGIN_SCREEN);
   };
 
   const goToLogin = () => {
     console.log('go to clicked');
-    navigation.navigate('Login');
+    navigation.navigate(LOGIN_SCREEN);
   };
 
   return (

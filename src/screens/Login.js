@@ -16,21 +16,26 @@ import {
   fontStyle,
 } from '../helpers/styleConstants';
 import CustomButton from '../components/CustomButton';
+import {
+  FORGOT_PASSWORD_SCREEN,
+  HOME_SCREEN,
+  REGISTER_SCREEN,
+} from '../helpers/destinationConstants';
 
 export default function Login({navigation}) {
   const goToRegister = () => {
     console.log('sign up clicked');
-    navigation.navigate('Register');
+    navigation.navigate(REGISTER_SCREEN);
   };
 
   const goToForgotPassword = () => {
     console.log('forgot clicked');
-    navigation.navigate('ForgotPassword');
+    navigation.navigate(FORGOT_PASSWORD_SCREEN);
   };
 
   const onLogin = () => {
     console.log('login clicked');
-    navigation.navigate('Home');
+    navigation.navigate(HOME_SCREEN);
   };
 
   return (

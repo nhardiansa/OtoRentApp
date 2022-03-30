@@ -22,21 +22,21 @@ export default function App() {
           options={{
             headerShown: false,
           }}
-          name="Login"
+          name={LOGIN_SCREEN}
           component={Login}
         />
         <Stack.Screen
           options={{
             headerShown: false,
           }}
-          name="Register"
+          name={REGISTER_SCREEN}
           component={Register}
         />
         <Stack.Screen
           options={{
             headerShown: false,
           }}
-          name="ForgotPassword"
+          name={FORGOT_PASSWORD_SCREEN}
           component={ForgotPassword}
         />
       </Stack.Navigator>
