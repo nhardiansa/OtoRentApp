@@ -8,9 +8,11 @@ import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import {
   FORGOT_PASSWORD_SCREEN,
+  HOME_SCREEN,
   LOGIN_SCREEN,
   REGISTER_SCREEN,
 } from './src/helpers/destinationConstants';
+import Home from './src/screens/Home';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +40,11 @@ export default function App() {
           }}
           name={FORGOT_PASSWORD_SCREEN}
           component={ForgotPassword}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name={HOME_SCREEN}
+          component={Home}
         />
       </Stack.Navigator>
     </NavigationContainer>
