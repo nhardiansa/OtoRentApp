@@ -2,6 +2,8 @@ import {extendTheme} from 'native-base';
 
 export const fontSize = {
   xl: 36,
+  slg: 28,
+  mlg: 24,
   lg: 18,
   md: 16,
   sm: 14,
