@@ -1,4 +1,10 @@
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TouchableHighlight,
+  StyleSheet,
+} from 'react-native';
 import React from 'react';
 import {
   colors,
@@ -30,10 +36,13 @@ export default function CustomButton({
   });
 
   return (
-    <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
-      <View style={[styles.button, styleContainer]}>
+    <View style={[styleContainer]}>
+      <TouchableHighlight
+        style={styles.button}
+        underlayColor={variant ? colors[variant + 'Dark'] : colors.primaryDark}
+        onPress={onPress}>
         <Text style={[styles.textBtn, styleText]}>{children}</Text>
-      </View>
-    </TouchableOpacity>
+      </TouchableHighlight>
+    </View>
   );
 }
