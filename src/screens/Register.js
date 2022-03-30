@@ -12,10 +12,17 @@ import CustomTextInput from '../components/CustomTextInput';
 
 import {colors, fontSize} from '../helpers/styleConstants';
 import {REGISTER_BG} from '../assets/images';
+import {LOGIN_SCREEN} from '../helpers/destinationConstants';
 
-export default function Register() {
-  const loginClicked = () => {
-    console.log('login clicked');
+export default function Register({navigation}) {
+  const onRegister = () => {
+    console.log('got to clicked');
+    navigation.navigate(LOGIN_SCREEN);
+  };
+
+  const goToLogin = () => {
+    console.log('go to clicked');
+    navigation.navigate(LOGIN_SCREEN);
   };
 
   return (
@@ -33,10 +40,12 @@ export default function Register() {
             style={styles.input}
             placeholder="Password"
           />
-          <CustomButton styleContainer={styles.button}>Register</CustomButton>
+          <CustomButton onPress={onRegister} styleContainer={styles.button}>
+            Register
+          </CustomButton>
           <Text style={styles.text}>
             Already have an account?{' '}
-            <Text onPress={loginClicked} style={styles.register}>
+            <Text onPress={goToLogin} style={styles.register}>
               Login now
             </Text>
           </Text>
