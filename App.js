@@ -11,42 +11,51 @@ import {
   HOME_SCREEN,
   LOGIN_SCREEN,
   REGISTER_SCREEN,
+  VIEW_MORE_SCREEN,
 } from './src/helpers/destinationConstants';
 import Home from './src/screens/Home';
+import ViewMore from './src/screens/ViewMore';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          options={{
-            headerShown: false,
-          }}
-          name={LOGIN_SCREEN}
-          component={Login}
-        />
-        <Stack.Screen
-          options={{
-            headerShown: false,
-          }}
-          name={REGISTER_SCREEN}
-          component={Register}
-        />
-        <Stack.Screen
-          options={{
-            headerShown: false,
-          }}
-          name={FORGOT_PASSWORD_SCREEN}
-          component={ForgotPassword}
-        />
-        <Stack.Screen
-          options={{headerShown: false}}
-          name={HOME_SCREEN}
-          component={Home}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <NativeBaseProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name={LOGIN_SCREEN}
+            component={Login}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name={REGISTER_SCREEN}
+            component={Register}
+          />
+          <Stack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name={FORGOT_PASSWORD_SCREEN}
+            component={ForgotPassword}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
+            name={HOME_SCREEN}
+            component={Home}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
+            name={VIEW_MORE_SCREEN}
+            component={ViewMore}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </NativeBaseProvider>
   );
 }

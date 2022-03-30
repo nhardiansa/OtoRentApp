@@ -16,8 +16,9 @@ import CustomTextInput from '../components/CustomTextInput';
 import Container from '../components/Container';
 import {HOME_BANNER, CAR_PLACEHOLDER} from '../assets/images';
 import {fontFamily, fontSize, fontStyle} from '../helpers/styleConstants';
+import {VIEW_MORE_SCREEN} from '../helpers/destinationConstants';
 
-export default function Home() {
+export default function Home({navigation}) {
   const vehicles = [
     {
       id: 1,
@@ -28,6 +29,11 @@ export default function Home() {
       src: CAR_PLACEHOLDER,
     },
   ];
+
+  const goToViewMore = () => {
+    console.log('Go to View More');
+    navigation.navigate(VIEW_MORE_SCREEN);
+  };
 
   const styles = StyleSheet.create({
     banner: {
@@ -89,7 +95,9 @@ export default function Home() {
         <View style={styles.vehicleSection}>
           <View style={styles.sectionHeader}>
             <Text style={[styles.text, styles.heading]}>Cars</Text>
-            <TouchableOpacity style={styles.linkContainer}>
+            <TouchableOpacity
+              onPress={goToViewMore}
+              style={styles.linkContainer}>
               <Text style={[styles.link, styles.text]}>View more</Text>
               <Icon name="chevron-right" size={18} />
             </TouchableOpacity>
