@@ -1,6 +1,6 @@
-import {View, StyleSheet, Text, TextInput} from 'react-native';
+import {StyleSheet, TextInput} from 'react-native';
 import React from 'react';
-import {fontSize} from '../helpers/styleConstants';
+import {fontFamily, fontSize} from '../helpers/styleConstants';
 
 export default function CustomTextInput({style, ...rest}) {
   return (
@@ -21,5 +21,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontWeight: 'bold',
     color: 'white',
+    fontFamily: 'Nunito',
   },
 });

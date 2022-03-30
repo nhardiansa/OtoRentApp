@@ -16,3 +16,8 @@ export const colors = {
   primaryDark: '#da5531',
   secondaryDark: '#ffd6b8',
 };
+
+export const fontFamily = {
+  nunito: 'Nunito',
+  roboto: 'Roboto',
+};

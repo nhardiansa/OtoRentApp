@@ -1,7 +1,6 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
 import {colors, fontSize} from '../helpers/styleConstants';
-import {useEffect, useState} from 'react/cjs/react.production.min';
 
 export default function CustomButton({
   children,
@@ -22,11 +21,12 @@ export default function CustomButton({
       textAlign: 'center',
       color: colors[variantText || 'white'],
       fontWeight: 'bold',
+      fontFamily: 'Nunito',
     },
   });
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+    <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
       <View style={[styles.button, styleContainer]}>
         <Text style={[styles.textBtn, styleText]}>{children}</Text>
       </View>
