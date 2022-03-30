@@ -21,3 +21,23 @@ export const fontFamily = {
   primary: 'Nunito',
   secondary: 'Roboto',
 };
+
+export const fontStyle = (FontFamily, fontWeight) => {
+  switch (fontWeight) {
+    case 'black': {
+      return `${FontFamily}-Black`;
+    }
+    case 'bold': {
+      return `${FontFamily}-Bold`;
+    }
+    case 'medium': {
+      return `${FontFamily}-Medium`;
+    }
+    case 'light': {
+      return `${FontFamily}-Light`;
+    }
+    default: {
+      return `${FontFamily}-Regular`;
+    }
+  }
+};
