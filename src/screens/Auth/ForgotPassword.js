@@ -7,8 +7,8 @@ import {
   SafeAreaView,
   TouchableWithoutFeedback,
 } from 'react-native';
-import CustomButton from '../components/CustomButton';
-import CustomTextInput from '../components/CustomTextInput';
+import CustomButton from '../../components/CustomButton';
+import CustomTextInput from '../../components/CustomTextInput';
 
 import Fa5Icon from 'react-native-vector-icons/FontAwesome5';
 import {
@@ -16,8 +16,8 @@ import {
   fontFamily,
   fontSize,
   fontStyle,
-} from '../helpers/styleConstants';
-import {FORGOT_PASSWORD_BG} from '../assets/images';
+} from '../../helpers/styleConstants';
+import {FORGOT_PASSWORD_BG} from '../../assets/images';
 
 export default function ForgotPassword({navigation}) {
   const sendEmail = () => {

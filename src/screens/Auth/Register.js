@@ -7,12 +7,12 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-import CustomButton from '../components/CustomButton';
-import CustomTextInput from '../components/CustomTextInput';
+import CustomButton from '../../components/CustomButton';
+import CustomTextInput from '../../components/CustomTextInput';
 
-import {colors, fontSize} from '../helpers/styleConstants';
-import {REGISTER_BG} from '../assets/images';
-import {LOGIN_SCREEN} from '../helpers/destinationConstants';
+import {colors, fontSize} from '../../helpers/styleConstants';
+import {REGISTER_BG} from '../../assets/images';
+import {LOGIN_SCREEN} from '../../helpers/destinationConstants';
 
 export default function Register({navigation}) {
   const onRegister = () => {

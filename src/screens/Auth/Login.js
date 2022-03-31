@@ -6,21 +6,21 @@ import {
   ImageBackground,
 } from 'react-native';
 import React from 'react';
-import CustomTextInput from '../components/CustomTextInput';
+import CustomTextInput from '../../components/CustomTextInput';
 
-import {LOGIN_BG} from '../assets/images';
+import {LOGIN_BG} from '../../assets/images';
 import {
   colors,
   fontFamily,
   fontSize,
   fontStyle,
-} from '../helpers/styleConstants';
-import CustomButton from '../components/CustomButton';
+} from '../../helpers/styleConstants';
+import CustomButton from '../../components/CustomButton';
 import {
   FORGOT_PASSWORD_SCREEN,
   HOME_SCREEN,
   REGISTER_SCREEN,
-} from '../helpers/destinationConstants';
+} from '../../helpers/destinationConstants';
 
 export default function Login({navigation}) {
   const goToRegister = () => {
