@@ -18,6 +18,7 @@ export const colors = {
   white: '#fff',
   green: '#087E0D',
   red: '#9B0A0A',
+  gray: '#DFDEDE',
 
   primaryDark: '#da5531',
   secondaryDark: '#ffd6b8',

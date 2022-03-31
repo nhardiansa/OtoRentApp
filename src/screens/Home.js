@@ -132,7 +132,7 @@ export default function Home({navigation}) {
           </View>
         </View>
 
-        <View>
+        <View style={styles.vehicleSection}>
           <View style={styles.sectionHeader}>
             <Text style={[styles.text, styles.heading]}>Bikes</Text>
             <TouchableOpacity style={styles.linkContainer}>
