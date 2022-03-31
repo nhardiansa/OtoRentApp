@@ -2,7 +2,12 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
 
 import Fa5Icon from 'react-native-vector-icons/FontAwesome5';
-import {fontFamily, fontSize, fontStyle} from '../helpers/styleConstants';
+import {
+  colors,
+  fontFamily,
+  fontSize,
+  fontStyle,
+} from '../helpers/styleConstants';
 
 export default function BackSection({onPress}) {
   const styles = StyleSheet.create({
@@ -10,6 +15,7 @@ export default function BackSection({onPress}) {
       fontFamily: fontStyle(fontFamily.primary, 'bold'),
       fontSize: fontSize.mlg,
       marginStart: 11,
+      color: colors.black,
     },
     container: {
       flexDirection: 'row',
@@ -28,7 +34,7 @@ export default function BackSection({onPress}) {
       activeOpacity={0.7}
       style={styles.outerContainer}>
       <View style={styles.container}>
-        <Fa5Icon name="chevron-left" size={24} />
+        <Fa5Icon name="chevron-left" size={24} color={colors.black} />
         <Text style={styles.text}>Back</Text>
       </View>
     </TouchableOpacity>
