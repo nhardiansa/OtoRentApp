@@ -82,7 +82,7 @@ export default function Home({navigation}) {
 
   return (
     <SafeAreaView>
-      <ScrollView showsVerticalScrollIndicator={true}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <ImageBackground
           source={HOME_BANNER}
           style={styles.banner}
