@@ -2,6 +2,8 @@ import {extendTheme} from 'native-base';
 
 export const fontSize = {
   xl: 36,
+  slg: 28,
+  mlg: 24,
   lg: 18,
   md: 16,
   sm: 14,
@@ -12,8 +14,10 @@ export const colors = {
   primary: '#FF7C52',
   secondary: '#FFE5D2',
   tertiary: '#FFA780',
-  black: '#000',
+  black: '#393939',
   white: '#fff',
+  green: '#087E0D',
+  red: '#9B0A0A',
 
   primaryDark: '#da5531',
   secondaryDark: '#ffd6b8',
