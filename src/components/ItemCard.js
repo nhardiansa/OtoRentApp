@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, Image, StyleSheet} from 'react-native';
+import {Text, Image, StyleSheet, Pressable} from 'react-native';
 import {Box, VStack} from 'native-base';
 import Fa5Icon from 'react-native-vector-icons/FontAwesome5';
 import {
@@ -9,8 +9,12 @@ import {
   fontStyle,
 } from '../helpers/styleConstants';
 
-const ItemCard = ({image, styleContainer}) => {
+const ItemCard = ({onPress, image, styleContainer, ...containerRest}) => {
   const styles = StyleSheet.create({
+    container: {
+      elevation: 2,
+      borderRadius: 10,
+    },
     image: {
       width: '100%',
       borderTopLeftRadius: 10,
@@ -28,6 +32,12 @@ const ItemCard = ({image, styleContainer}) => {
     },
     locationText: {
       fontSize: fontSize.md,
+    },
+    detailWrapper: {
+      padding: 10,
+      borderBottomStartRadius: 10,
+      borderBottomEndRadius: 10,
+      backgroundColor: colors.white,
     },
     pricing: {
       flexDirection: 'row',
@@ -52,39 +62,35 @@ const ItemCard = ({image, styleContainer}) => {
   });
 
   return (
-    <Box
-      mx="4"
-      borderWidth={1}
-      borderColor="red.100"
-      borderTopRadius={10}
-      borderBottomRadius={10}
-      style={styleContainer}>
-      <VStack>
-        <Box>
-          <Image source={image} style={styles.image} />
-        </Box>
-        <Box p={4}>
-          <Box style={styles.location}>
-            <Fa5Icon
-              name="map-marker-alt"
-              size={fontSize.lg}
-              style={styles.locationIcon}
-              color={colors.red}
-            />
-            <Text style={styles.locationText}>Makassar</Text>
+    <Pressable onPress={onPress}>
+      <Box style={[styles.container, styleContainer]} {...containerRest}>
+        <VStack>
+          <Box>
+            <Image source={image} style={styles.image} />
           </Box>
-          <Box style={styles.pricing}>
-            <Box>
-              <Text style={styles.title}>Vespa Matic</Text>
-              <Text style={styles.isAvailable}>Available</Text>
+          <Box style={styles.detailWrapper}>
+            <Box style={styles.location}>
+              <Fa5Icon
+                name="map-marker-alt"
+                size={fontSize.lg}
+                style={styles.locationIcon}
+                color={colors.red}
+              />
+              <Text style={styles.locationText}>Makassar</Text>
             </Box>
-            <Text style={styles.price}>
-              {Number('100000').toLocaleString('id-ID')}/day
-            </Text>
+            <Box style={styles.pricing}>
+              <Box>
+                <Text style={styles.title}>Vespa Matic</Text>
+                <Text style={styles.isAvailable}>Available</Text>
+              </Box>
+              <Text style={styles.price}>
+                {Number('100000').toLocaleString('id-ID')}/day
+              </Text>
+            </Box>
           </Box>
-        </Box>
-      </VStack>
-    </Box>
+        </VStack>
+      </Box>
+    </Pressable>
   );
 };
 
