@@ -49,11 +49,7 @@ export default function App() {
             name={HOME_SCREEN}
             component={Home}
           />
-          <Stack.Screen
-            options={{headerShown: false}}
-            name={VIEW_MORE_SCREEN}
-            component={ViewMore}
-          />
+          <Stack.Screen name={VIEW_MORE_SCREEN} component={ViewMore} />
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>

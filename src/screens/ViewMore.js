@@ -1,25 +1,27 @@
-import {Box, Divider, FlatList, VStack} from 'native-base';
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import React, {useLayoutEffect, useCallback} from 'react';
+import {View, StyleSheet, SafeAreaView} from 'react-native';
 
-import BackSection from '../components/BackSection';
-import Container from '../components/Container';
+import {FlatList} from 'native-base';
 
 import {MOTORBIKE_PLACEHOLDER} from '../assets/images';
-import {fontFamily, fontSize, fontStyle} from '../helpers/styleConstants';
 import ItemCard from '../components/ItemCard';
+import BackSection from '../components/BackSection';
 
 export default function ViewMore({navigation}) {
-  const goBack = () => {
-    navigation.push();
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => <BackSection onPress={goBack} />,
+      title: '',
+      headerRight: () => null,
+    });
+  }, [navigation, goBack]);
+
+  const goBack = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+
+  const goToDetail = () => {
+    console.log('Go to Detail');
   };
 
   const data = [
@@ -67,18 +69,20 @@ export default function ViewMore({navigation}) {
     },
   ];
 
+  const styles = StyleSheet.create({
+    container: {
+      padding: 20,
+    },
+  });
+
   return (
     <SafeAreaView>
       <View>
         <FlatList
-          ListHeaderComponent={
-            <Container>
-              <BackSection onPress={goBack} />
-            </Container>
-          }
+          contentContainerStyle={styles.container}
           data={data}
           renderItem={({item}) => {
-            return <ItemCard image={item.image} />;
+            return <ItemCard onPress={goToDetail} mb="4" image={item.image} />;
           }}
         />
       </View>
