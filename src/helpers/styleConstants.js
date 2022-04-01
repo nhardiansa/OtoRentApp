@@ -46,6 +46,9 @@ export const fontStyle = (FontFamily, fontWeight) => {
     case 'light': {
       return `${FontFamily}-Light`;
     }
+    case 'semiBold': {
+      return `${FontFamily}-SemiBold`;
+    }
     default: {
       return `${FontFamily}-Regular`;
     }
