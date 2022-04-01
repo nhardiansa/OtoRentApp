@@ -5,6 +5,7 @@ import {
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
+  Pressable,
   FlatList,
   Image,
   SafeAreaView,
@@ -14,9 +15,12 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import CustomTextInput from '../components/CustomTextInput';
 import Container from '../components/Container';
-import {HOME_BANNER, CAR_PLACEHOLDER} from '../assets/images';
+import {HOME_BANNER, CAR_PLACEHOLDER, BIKE_PLACEHOLDER} from '../assets/images';
 import {fontFamily, fontSize, fontStyle} from '../helpers/styleConstants';
-import {VIEW_MORE_SCREEN} from '../helpers/destinationConstants';
+import {
+  VEHICLE_DETAIL,
+  VIEW_MORE_SCREEN,
+} from '../helpers/destinationConstants';
 
 export default function Home({navigation}) {
   const vehicles = [
@@ -30,9 +34,25 @@ export default function Home({navigation}) {
     },
   ];
 
+  const bikes = [
+    {
+      id: 1,
+      src: BIKE_PLACEHOLDER,
+    },
+    {
+      id: 2,
+      src: BIKE_PLACEHOLDER,
+    },
+  ];
+
   const goToViewMore = () => {
     console.log('Go to View More');
     navigation.navigate(VIEW_MORE_SCREEN);
+  };
+
+  const goToDetail = () => {
+    console.log('Go to Detail');
+    navigation.navigate(VEHICLE_DETAIL);
   };
 
   const styles = StyleSheet.create({
@@ -77,7 +97,11 @@ export default function Home({navigation}) {
   });
 
   const vehicleCard = vehicle => {
-    return <Image resizeMode="cover" style={styles.item} source={vehicle} />;
+    return (
+      <Pressable onPress={goToDetail}>
+        <Image resizeMode="cover" style={styles.item} source={vehicle} />
+      </Pressable>
+    );
   };
 
   return (
@@ -142,7 +166,7 @@ export default function Home({navigation}) {
           </View>
           <View style={styles.container}>
             <FlatList
-              data={vehicles}
+              data={bikes}
               renderItem={({item}) => vehicleCard(item.src)}
               horizontal={true}
               contentContainerStyle={styles.listContainer}

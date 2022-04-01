@@ -9,7 +9,7 @@ import {
   fontStyle,
 } from '../helpers/styleConstants';
 
-export default function BackSection({onPress}) {
+export default function BackSection({onPress, textStyle, iconStyle}) {
   const styles = StyleSheet.create({
     text: {
       fontFamily: fontStyle(fontFamily.primary, 'bold'),
@@ -34,8 +34,13 @@ export default function BackSection({onPress}) {
       activeOpacity={0.7}
       style={styles.outerContainer}>
       <View style={styles.container}>
-        <Fa5Icon name="chevron-left" size={24} color={colors.black} />
-        <Text style={styles.text}>Back</Text>
+        <Fa5Icon
+          name="chevron-left"
+          style={iconStyle}
+          size={24}
+          color={colors.black}
+        />
+        <Text style={[styles.text, textStyle]}>Back</Text>
       </View>
     </TouchableOpacity>
   );

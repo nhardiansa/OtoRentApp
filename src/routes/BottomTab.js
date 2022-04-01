@@ -9,6 +9,7 @@ import SearchResult from '../screens/Search/SearchResult';
 import History from '../screens/Payment/History';
 import {HOME_SCREEN} from '../helpers/destinationConstants';
 import {colors} from '../helpers/styleConstants';
+import HomeTab from './HomeTab';
 
 const BottomStack = createBottomTabNavigator();
 
@@ -27,8 +28,8 @@ export default function BottomTab({navigation}) {
       }}
       initialRouteName={HOME_SCREEN}>
       <BottomStack.Screen
-        name={HOME_SCREEN}
-        component={Home}
+        name="HomeTab"
+        component={HomeTab}
         options={{
           tabBarIcon: ({color, size}) => (
             <FAIcon name="home" color={color} size={size} />

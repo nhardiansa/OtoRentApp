@@ -10,8 +10,9 @@ import BackSection from '../components/BackSection';
 export default function ViewMore({navigation}) {
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerLeft: () => <BackSection onPress={goBack} />,
       title: '',
+      headerShown: true,
+      headerLeft: () => <BackSection onPress={goBack} />,
       headerRight: () => null,
     });
   }, [navigation, goBack]);

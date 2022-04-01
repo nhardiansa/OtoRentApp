@@ -5,10 +5,10 @@ import {NavigationContainer} from '@react-navigation/native';
 
 import UpdateProfile from '../screens/Profile/UpdateProfile';
 import Favorites from '../screens/Favorites';
-import ViewMore from '../screens/ViewMore';
 
 import BottomTab from './BottomTab';
-import {VIEW_MORE_SCREEN} from '../helpers/destinationConstants';
+import VehicleDetail from '../screens/VehicleDetail';
+import {VEHICLE_DETAIL} from '../helpers/destinationConstants';
 
 const MainStack = createNativeStackNavigator();
 
@@ -19,7 +19,7 @@ export default function Routes() {
         <MainStack.Screen name="BottomTab" component={BottomTab} />
         <MainStack.Screen name="UpdateProfile" component={UpdateProfile} />
         <MainStack.Screen name="Favorites" component={Favorites} />
-        <MainStack.Screen name={VIEW_MORE_SCREEN} component={ViewMore} />
+        <MainStack.Screen name={VEHICLE_DETAIL} component={VehicleDetail} />
       </MainStack.Navigator>
     </NavigationContainer>
   );
