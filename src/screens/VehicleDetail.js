@@ -64,6 +64,10 @@ export default function VehicleDetail({navigation}) {
     });
   };
 
+  const goBack = () => {
+    navigation.goBack();
+  };
+
   const styles = StyleSheet.create({
     starIcon: {
       fontSize: 20,
@@ -86,8 +90,9 @@ export default function VehicleDetail({navigation}) {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      zIndex: 1,
       paddingVertical: 15,
+      position: 'absolute',
+      width: '100%',
     },
     backText: {
       display: 'none',
@@ -100,7 +105,6 @@ export default function VehicleDetail({navigation}) {
       position: 'relative',
     },
     imageWrapper: {
-      // position: 'absolute',
       width: '100%',
       height: 300,
       flexDirection: 'row',
@@ -194,7 +198,7 @@ export default function VehicleDetail({navigation}) {
       backgroundColor: 'rgba(0,0,0,0.1)',
       paddingVertical: 5,
       paddingHorizontal: 14,
-      paddingLeft: 0,
+      // paddingLeft: 0,
       borderRadius: 10,
       flex: 2,
       fontFamily: fontStyle(fontFamily.primary, 'bold'),
@@ -217,19 +221,20 @@ export default function VehicleDetail({navigation}) {
     <SafeAreaView>
       <ScrollView>
         <Stack style={styles.headerWrapper}>
+          <View style={styles.imageWrapper}>
+            <Image source={CAR_PLACEHOLDER} style={styles.image} />
+          </View>
           <View style={[globalStyle.container, styles.header]}>
             <BackSection
               textStyle={styles.backText}
               iconStyle={styles.backIcon}
+              onPress={goBack}
             />
             <View style={styles.rightSection}>
               <Text style={styles.ratingText}>
                 4.5 <FAIcon name="star" style={styles.starIcon} />
               </Text>
             </View>
-          </View>
-          <View style={styles.imageWrapper}>
-            <Image source={CAR_PLACEHOLDER} style={styles.image} />
           </View>
         </Stack>
 
