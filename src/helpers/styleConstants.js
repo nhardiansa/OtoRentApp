@@ -24,6 +24,7 @@ export const colors = {
   secondaryDark: '#ffd6b8',
   tertiaryDark: '#ff9e5a',
   whiteDark: '#ebebeb',
+  grayDark: '#616167',
 };
 
 export const fontFamily = {
