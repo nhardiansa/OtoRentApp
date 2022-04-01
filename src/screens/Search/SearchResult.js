@@ -15,7 +15,10 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import {colors} from '../../helpers/styleConstants';
 import {MOTORBIKE_PLACEHOLDER} from '../../assets/images';
 import ItemCard from '../../components/ItemCard';
-import {VEHICLE_DETAIL} from '../../helpers/destinationConstants';
+import {
+  FILTER_SCREEN,
+  VEHICLE_DETAIL,
+} from '../../helpers/destinationConstants';
 
 export default function SearchResult({navigation}) {
   const [search, setSearch] = useState('');
@@ -30,6 +33,7 @@ export default function SearchResult({navigation}) {
 
   const goToFilter = () => {
     console.log('goToFilter');
+    navigation.navigate(FILTER_SCREEN);
   };
 
   const goToDetail = () => {
