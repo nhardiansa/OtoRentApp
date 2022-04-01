@@ -57,7 +57,7 @@ export default function Home({navigation}) {
 
   const styles = StyleSheet.create({
     banner: {
-      minHeight: '40%',
+      minHeight: '30%',
       marginBottom: 20,
     },
     text: {
@@ -94,6 +94,9 @@ export default function Home({navigation}) {
     vehicleSection: {
       marginBottom: 30,
     },
+    contentContainer: {
+      paddingBottom: '60%',
+    },
   });
 
   const vehicleCard = vehicle => {
@@ -116,62 +119,62 @@ export default function Home({navigation}) {
           </Container>
         </ImageBackground>
 
-        <View style={styles.vehicleSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={[styles.text, styles.heading]}>Cars</Text>
-            <TouchableOpacity
-              onPress={goToViewMore}
-              style={styles.linkContainer}>
-              <Text style={[styles.link, styles.text]}>View more</Text>
-              <Icon name="chevron-right" size={18} />
-            </TouchableOpacity>
+        <View style={styles.contentContainer}>
+          <View style={styles.vehicleSection}>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.text, styles.heading]}>Cars</Text>
+              <TouchableOpacity
+                onPress={goToViewMore}
+                style={styles.linkContainer}>
+                <Text style={[styles.link, styles.text]}>View more</Text>
+                <Icon name="chevron-right" size={18} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.container}>
+              <FlatList
+                data={vehicles}
+                renderItem={({item}) => vehicleCard(item.src)}
+                horizontal={true}
+                contentContainerStyle={styles.listContainer}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
           </View>
-          <View style={styles.container}>
-            <FlatList
-              data={vehicles}
-              renderItem={({item}) => vehicleCard(item.src)}
-              horizontal={true}
-              contentContainerStyle={styles.listContainer}
-              showsHorizontalScrollIndicator={false}
-            />
+          <View style={styles.vehicleSection}>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.text, styles.heading]}>Motorbikes</Text>
+              <TouchableOpacity style={styles.linkContainer}>
+                <Text style={[styles.link, styles.text]}>View more</Text>
+                <Icon name="chevron-right" size={18} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.container}>
+              <FlatList
+                data={vehicles}
+                renderItem={({item}) => vehicleCard(item.src)}
+                horizontal={true}
+                contentContainerStyle={styles.listContainer}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
           </View>
-        </View>
-
-        <View style={styles.vehicleSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={[styles.text, styles.heading]}>Motorbikes</Text>
-            <TouchableOpacity style={styles.linkContainer}>
-              <Text style={[styles.link, styles.text]}>View more</Text>
-              <Icon name="chevron-right" size={18} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.container}>
-            <FlatList
-              data={vehicles}
-              renderItem={({item}) => vehicleCard(item.src)}
-              horizontal={true}
-              contentContainerStyle={styles.listContainer}
-              showsHorizontalScrollIndicator={false}
-            />
-          </View>
-        </View>
-
-        <View style={styles.vehicleSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={[styles.text, styles.heading]}>Bikes</Text>
-            <TouchableOpacity style={styles.linkContainer}>
-              <Text style={[styles.link, styles.text]}>View more</Text>
-              <Icon name="chevron-right" size={18} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.container}>
-            <FlatList
-              data={bikes}
-              renderItem={({item}) => vehicleCard(item.src)}
-              horizontal={true}
-              contentContainerStyle={styles.listContainer}
-              showsHorizontalScrollIndicator={false}
-            />
+          <View style={styles.vehicleSection}>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.text, styles.heading]}>Bikes</Text>
+              <TouchableOpacity style={styles.linkContainer}>
+                <Text style={[styles.link, styles.text]}>View more</Text>
+                <Icon name="chevron-right" size={18} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.container}>
+              <FlatList
+                data={bikes}
+                renderItem={({item}) => vehicleCard(item.src)}
+                horizontal={true}
+                contentContainerStyle={styles.listContainer}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
