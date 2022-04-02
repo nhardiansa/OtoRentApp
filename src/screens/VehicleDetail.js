@@ -24,6 +24,7 @@ import {
 } from '../helpers/styleConstants';
 import {Box, ScrollView, Stack, Select} from 'native-base';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
+import {PAYMENT_STACK} from '../helpers/destinationConstants';
 
 export default function VehicleDetail({navigation}) {
   useLayoutEffect(() => {
@@ -66,6 +67,11 @@ export default function VehicleDetail({navigation}) {
 
   const goBack = () => {
     navigation.goBack();
+  };
+
+  const doReservation = () => {
+    console.log('Reservation');
+    navigation.navigate(PAYMENT_STACK);
   };
 
   const styles = StyleSheet.create({
@@ -300,7 +306,9 @@ export default function VehicleDetail({navigation}) {
               <Text style={styles.placeholder}>Day</Text>
             </Box>
           </Box>
-          <CustomButton styleContainer={styles.reservationBtn}>
+          <CustomButton
+            onPress={doReservation}
+            styleContainer={styles.reservationBtn}>
             Reservation
           </CustomButton>
         </Stack>
