@@ -5,8 +5,9 @@ import {Box, Input, Pressable, Select} from 'native-base';
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import CustomButton from '../../components/CustomButton';
 import Stepper from '../../components/Stepper';
+import {GET_PAYMENT_CODE} from '../../helpers/destinationConstants';
 
-export default function PaymentForm() {
+export default function PaymentForm({navigation}) {
   const [paymentMethod, setPaymentMethod] = React.useState('');
 
   const styles = StyleSheet.create({
@@ -15,6 +16,11 @@ export default function PaymentForm() {
       marginRight: 12,
     },
   });
+
+  const getPaymentCode = () => {
+    console.log('Get Payment Code');
+    navigation.navigate(GET_PAYMENT_CODE);
+  };
 
   return (
     <Box
@@ -38,7 +44,7 @@ export default function PaymentForm() {
           />
         </Pressable>
       </Box>
-      <CustomButton>See Order Details</CustomButton>
+      <CustomButton onPress={getPaymentCode}>See Order Details</CustomButton>
     </Box>
   );
 }

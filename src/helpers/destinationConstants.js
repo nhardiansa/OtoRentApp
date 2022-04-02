@@ -12,3 +12,5 @@ export const VEHICLE_DETAIL = 'VehicleDetail';
 
 export const PAYMENT_STACK = 'PaymentStack';
 export const PAYMENT_FORM = 'PaymentForm';
+export const PAYMENT_DETAIL = 'PaymentDetail';
+export const GET_PAYMENT_CODE = 'GetPaymentCode';
