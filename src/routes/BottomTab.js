@@ -3,13 +3,15 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
 import MAIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import IOIcon from 'react-native-vector-icons/Ionicons';
 
-import Home from '../screens/Home';
+import Profile from '../screens/Profile/Profile';
 import SearchResult from '../screens/Search/SearchResult';
 import History from '../screens/Payment/History';
-import {HOME_SCREEN} from '../helpers/destinationConstants';
+import {HOME_SCREEN, SEARCH_SCREEN} from '../helpers/destinationConstants';
 import {colors} from '../helpers/styleConstants';
 import HomeTab from './HomeTab';
+import SearchStack from './SearchStack';
 
 const BottomStack = createBottomTabNavigator();
 
@@ -25,6 +27,7 @@ export default function BottomTab({navigation}) {
       screenOptions={{
         title: '',
         headerShown: false,
+        tabBarActiveTintColor: colors.primary,
       }}
       initialRouteName={HOME_SCREEN}>
       <BottomStack.Screen
@@ -34,17 +37,15 @@ export default function BottomTab({navigation}) {
           tabBarIcon: ({color, size}) => (
             <FAIcon name="home" color={color} size={size} />
           ),
-          tabBarActiveTintColor: colors.primary,
         }}
       />
       <BottomStack.Screen
-        name="Search"
-        component={SearchResult}
+        name={SEARCH_SCREEN}
+        component={SearchStack}
         options={{
           tabBarIcon: ({color, size}) => (
             <FAIcon name="search" color={color} size={size} />
           ),
-          tabBarActiveTintColor: colors.primary,
         }}
       />
       <BottomStack.Screen
@@ -54,7 +55,15 @@ export default function BottomTab({navigation}) {
           tabBarIcon: ({color, size}) => (
             <MAIcon name="note-text-outline" color={color} size={size} />
           ),
-          tabBarActiveTintColor: colors.primary,
+        }}
+      />
+      <BottomStack.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({color, size}) => (
+            <IOIcon name="person" color={color} size={size} />
+          ),
         }}
       />
     </BottomStack.Navigator>

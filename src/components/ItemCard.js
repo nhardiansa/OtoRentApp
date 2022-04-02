@@ -9,7 +9,7 @@ import {
   fontStyle,
 } from '../helpers/styleConstants';
 
-const ItemCard = ({onPress, image, styleContainer, ...containerRest}) => {
+const ItemCard = ({onPress, name, image, styleContainer, ...containerRest}) => {
   const styles = StyleSheet.create({
     container: {
       elevation: 2,
@@ -80,7 +80,7 @@ const ItemCard = ({onPress, image, styleContainer, ...containerRest}) => {
             </Box>
             <Box style={styles.pricing}>
               <Box>
-                <Text style={styles.title}>Vespa Matic</Text>
+                <Text style={styles.title}>{name || 'Unknown'}</Text>
                 <Text style={styles.isAvailable}>Available</Text>
               </Box>
               <Text style={styles.price}>

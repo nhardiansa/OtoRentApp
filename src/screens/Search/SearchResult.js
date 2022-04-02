@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {View, SafeAreaView, StyleSheet} from 'react-native';
 
 import {
@@ -15,10 +15,19 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import {colors} from '../../helpers/styleConstants';
 import {MOTORBIKE_PLACEHOLDER} from '../../assets/images';
 import ItemCard from '../../components/ItemCard';
-import {VEHICLE_DETAIL} from '../../helpers/destinationConstants';
+import {
+  FILTER_SCREEN,
+  VEHICLE_DETAIL,
+} from '../../helpers/destinationConstants';
 
 export default function SearchResult({navigation}) {
   const [search, setSearch] = useState('');
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
 
   const searchChange = e => {
     setSearch(e);
@@ -30,6 +39,7 @@ export default function SearchResult({navigation}) {
 
   const goToFilter = () => {
     console.log('goToFilter');
+    navigation.navigate(FILTER_SCREEN);
   };
 
   const goToDetail = () => {
@@ -70,14 +80,14 @@ export default function SearchResult({navigation}) {
       image: MOTORBIKE_PLACEHOLDER,
       location: 'Makassar',
       price: 250000,
-      title: 'Vespa Matic',
+      title: 'Vespa Manual',
       isAvailable: true,
     },
     {
       image: MOTORBIKE_PLACEHOLDER,
       location: 'Makassar',
       price: 250000,
-      title: 'Vespa Matic',
+      title: 'Vespa Manual',
       isAvailable: true,
     },
   ];
@@ -98,9 +108,12 @@ export default function SearchResult({navigation}) {
       fontSize: 20,
       color: colors.gray,
     },
+    listContainer: {
+      paddingBottom: 280,
+    },
   });
   return (
-    <SafeAreaView>
+    <Box>
       <Box
         style={styles.searchWrapper}
         borderBottomWidth={1}
@@ -124,7 +137,7 @@ export default function SearchResult({navigation}) {
           }
         />
       </Box>
-      <Box px="5" borderBottomColor="#F5F5F5" borderBottomWidth={1} pb="3">
+      <Box px="5" borderBottomColor="#F5F5F5" borderBottomWidth={1}>
         <Pressable onPress={goToFilter}>
           <Box flexDir="row" alignItems="center">
             <FAIcon name="filter" style={styles.filterIcon} />
@@ -136,13 +149,22 @@ export default function SearchResult({navigation}) {
       </Box>
       <Box px="5">
         <FlatList
+          mt={5}
+          contentContainerStyle={styles.listContainer}
           data={data}
           renderItem={({item}) => {
-            return <ItemCard onPress={goToDetail} mb="4" image={item.image} />;
+            return (
+              <ItemCard
+                onPress={goToDetail}
+                mb="4"
+                name={item.title}
+                image={item.image}
+              />
+            );
           }}
           showsVerticalScrollIndicator={false}
         />
       </Box>
-    </SafeAreaView>
+    </Box>
   );
 }
