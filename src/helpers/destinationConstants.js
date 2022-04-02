@@ -9,3 +9,6 @@ export const FILTER_SCREEN = 'filter';
 export const SEARCH_SCREEN = 'search';
 
 export const VEHICLE_DETAIL = 'VehicleDetail';
+
+export const PAYMENT_STACK = 'PaymentStack';
+export const PAYMENT_FORM = 'PaymentForm';

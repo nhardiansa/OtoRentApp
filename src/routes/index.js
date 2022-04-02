@@ -8,7 +8,8 @@ import Favorites from '../screens/Favorites';
 
 import BottomTab from './BottomTab';
 import VehicleDetail from '../screens/VehicleDetail';
-import {VEHICLE_DETAIL} from '../helpers/destinationConstants';
+import {PAYMENT_STACK, VEHICLE_DETAIL} from '../helpers/destinationConstants';
+import PaymentStack from './PaymentStack';
 
 const MainStack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ export default function Routes() {
         <MainStack.Screen name="UpdateProfile" component={UpdateProfile} />
         <MainStack.Screen name="Favorites" component={Favorites} />
         <MainStack.Screen name={VEHICLE_DETAIL} component={VehicleDetail} />
+        <MainStack.Screen name={PAYMENT_STACK} component={PaymentStack} />
       </MainStack.Navigator>
     </NavigationContainer>
   );
