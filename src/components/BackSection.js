@@ -9,7 +9,7 @@ import {
   fontStyle,
 } from '../helpers/styleConstants';
 
-export default function BackSection({onPress, textStyle, iconStyle}) {
+export default function BackSection({onPress, textStyle, iconStyle, title}) {
   const styles = StyleSheet.create({
     text: {
       fontFamily: fontStyle(fontFamily.primary, 'bold'),
@@ -40,7 +40,7 @@ export default function BackSection({onPress, textStyle, iconStyle}) {
           size={24}
           color={colors.black}
         />
-        <Text style={[styles.text, textStyle]}>Back</Text>
+        <Text style={[styles.text, textStyle]}>{title || 'Back'}</Text>
       </View>
     </TouchableOpacity>
   );
