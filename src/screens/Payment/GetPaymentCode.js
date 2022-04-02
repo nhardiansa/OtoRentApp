@@ -9,6 +9,7 @@ import CustomButton from '../../components/CustomButton';
 import Stepper from '../../components/Stepper';
 import {colors, fontFamily, fontStyle} from '../../helpers/styleConstants';
 import {priceFormat} from '../../helpers/formatter';
+import {FINISH_PAYMENT} from '../../helpers/destinationConstants';
 
 export default function GetPaymentCode({navigation}) {
   React.useLayoutEffect(() => {
@@ -19,6 +20,12 @@ export default function GetPaymentCode({navigation}) {
       ),
     });
   }, [navigation]);
+
+  const finishPayment = () => {
+    console.log('finish payment');
+    navigation.navigate(FINISH_PAYMENT);
+  };
+
   return (
     <ScrollView>
       <Box px="5" pb="12" pt="12" flex={1} backgroundColor="white">
@@ -69,7 +76,7 @@ export default function GetPaymentCode({navigation}) {
           Rp {priceFormat(100000)}
         </Text>
 
-        <CustomButton> Bayar </CustomButton>
+        <CustomButton onPress={finishPayment}> Get Payment Code </CustomButton>
       </Box>
     </ScrollView>
   );
