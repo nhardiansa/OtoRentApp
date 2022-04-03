@@ -123,7 +123,7 @@ export default function Home({navigation}) {
     <SafeAreaView>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Box w="full" position="relative" mb="5">
-          <NBImage w="full" source={HOME_BANNER} />
+          <NBImage w="full" source={HOME_BANNER} alt="banner" />
           <Box px="5" mt="6" position="absolute" w="full">
             <Input
               bgColor="rgba(0, 0, 0, 0.5)"
