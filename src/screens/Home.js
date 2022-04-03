@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
-  ImageBackground,
   StyleSheet,
   TouchableOpacity,
   Pressable,
@@ -12,9 +11,9 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {useSelector, useDispatch} from 'react-redux';
+import {Box, Image as NBImage, Input} from 'native-base';
 
-import CustomTextInput from '../components/CustomTextInput';
-import Container from '../components/Container';
 import {HOME_BANNER, CAR_PLACEHOLDER, BIKE_PLACEHOLDER} from '../assets/images';
 import {fontFamily, fontSize, fontStyle} from '../helpers/styleConstants';
 import {
@@ -22,7 +21,24 @@ import {
   VIEW_MORE_SCREEN,
 } from '../helpers/destinationConstants';
 
+import {baseURL} from '../helpers/constants';
+import {getVehiclesHome} from '../redux/actions/vehicleActions';
+
 export default function Home({navigation}) {
+  const {vehiclesReducer} = useSelector(state => state);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log('Home');
+    console.log('baseURL', baseURL);
+    getVehicles();
+    console.log('vehiclesReducer', vehiclesReducer);
+  }, []);
+
+  const getVehicles = async () => {
+    dispatch(getVehiclesHome());
+  };
+
   const vehicles = [
     {
       id: 1,
@@ -57,7 +73,6 @@ export default function Home({navigation}) {
 
   const styles = StyleSheet.create({
     banner: {
-      minHeight: '30%',
       marginBottom: 20,
     },
     text: {
@@ -94,15 +109,12 @@ export default function Home({navigation}) {
     vehicleSection: {
       marginBottom: 30,
     },
-    contentContainer: {
-      paddingBottom: '60%',
-    },
   });
 
-  const vehicleCard = vehicle => {
+  const vehicleCard = imgSrc => {
     return (
       <Pressable onPress={goToDetail}>
-        <Image resizeMode="cover" style={styles.item} source={vehicle} />
+        <Image resizeMode="cover" style={styles.item} source={imgSrc} />
       </Pressable>
     );
   };
@@ -110,14 +122,25 @@ export default function Home({navigation}) {
   return (
     <SafeAreaView>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <ImageBackground
-          source={HOME_BANNER}
-          style={styles.banner}
-          resizeMode={'cover'}>
-          <Container>
-            <CustomTextInput placeholder="Search vehicle " />
-          </Container>
-        </ImageBackground>
+        <Box w="full" position="relative" mb="5">
+          <NBImage w="full" source={HOME_BANNER} alt="banner" />
+          <Box px="5" mt="6" position="absolute" w="full">
+            <Input
+              bgColor="rgba(0, 0, 0, 0.5)"
+              borderWidth="0"
+              placeholder="Search vehicle"
+              color="white"
+              placeholderTextColor="white"
+              fontFamily={fontStyle(fontFamily.primary, 'bold')}
+              fontSize="md"
+              InputRightElement={
+                <Box mr="5">
+                  <Icon name="search" size={20} color="white" />
+                </Box>
+              }
+            />
+          </Box>
+        </Box>
 
         <View style={styles.contentContainer}>
           <View style={styles.vehicleSection}>

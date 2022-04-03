@@ -5,8 +5,8 @@ import {
   SafeAreaView,
   ImageBackground,
 } from 'react-native';
-import React from 'react';
-import CustomTextInput from '../../components/CustomTextInput';
+import React, {useEffect, useState} from 'react';
+// import CustomTextInput from '../../components/CustomTextInput';
 
 import {LOGIN_BG} from '../../assets/images';
 import {
@@ -18,11 +18,30 @@ import {
 import CustomButton from '../../components/CustomButton';
 import {
   FORGOT_PASSWORD_SCREEN,
-  HOME_SCREEN,
   REGISTER_SCREEN,
 } from '../../helpers/destinationConstants';
+import {Box, Input, Pressable, useToast} from 'native-base';
+import {useDispatch, useSelector} from 'react-redux';
+import {onLogin as loginAction} from '../../redux/actions/authActions';
+import IOIcon from 'react-native-vector-icons/Ionicons';
 
 export default function Login({navigation}) {
+  const {authReducer} = useSelector(state => state);
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(true);
+
+  const toast = useToast();
+
+  useEffect(() => {
+    if (authReducer.error) {
+      toast.show({
+        description: authReducer.error,
+      });
+    }
+  }, [authReducer]);
+
   const goToRegister = () => {
     console.log('sign up clicked');
     navigation.navigate(REGISTER_SCREEN);
@@ -34,8 +53,18 @@ export default function Login({navigation}) {
   };
 
   const onLogin = () => {
-    console.log('login clicked');
-    navigation.navigate(HOME_SCREEN);
+    if (!email || !password) {
+      toast.show({
+        description: 'Please enter valid email and password',
+      });
+      return;
+    }
+
+    console.log(email, password);
+
+    dispatch(loginAction(email, password));
+
+    // navigation.navigate(HOME_SCREEN);
   };
 
   return (
@@ -46,8 +75,39 @@ export default function Login({navigation}) {
       <SafeAreaView style={styles.container}>
         <Text style={styles.heading}>LET’S EXPLORE THE WORLD</Text>
         <View>
-          <CustomTextInput placeholder="Username" />
-          <CustomTextInput style={styles.input} placeholder="Password" />
+          {/* {/* <CustomTextInput placeholder="Username" /> */}
+          {/* <CustomTextInput style={styles.input} placeholder="Password" /> */}
+          <Input
+            onChangeText={text => setEmail(text)}
+            placeholder="Username"
+            bgColor="rgba(223, 222, 222, 0.3)"
+            fontFamily={fontStyle(fontFamily.primary, 'bold')}
+            placeholderTextColor={colors.white}
+            borderWidth={0}
+            color={colors.white}
+            mb="5"
+          />
+          <Input
+            onChangeText={text => setPassword(text)}
+            placeholder="Password"
+            bgColor="rgba(223, 222, 222, 0.3)"
+            fontFamily={fontStyle(fontFamily.primary, 'bold')}
+            placeholderTextColor={colors.white}
+            borderWidth={0}
+            color={colors.white}
+            secureTextEntry={showPassword}
+            InputRightElement={
+              <Box mr="4">
+                <Pressable onPress={() => setShowPassword(!showPassword)}>
+                  {showPassword ? (
+                    <IOIcon name="ios-eye" size={24} color={colors.white} />
+                  ) : (
+                    <IOIcon name="ios-eye-off" size={24} color={colors.white} />
+                  )}
+                </Pressable>
+              </Box>
+            }
+          />
           <Text style={styles.link} onPress={goToForgotPassword}>
             Forgot Password
           </Text>
