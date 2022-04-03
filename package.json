@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android --reset-cache",
-    "ios": "react-native run-ios --reset-cache",
-    "start": "react-native start --reset-cache",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
     "test": "jest",
     "lint": "npx eslint **/*.js --fix"
   },
