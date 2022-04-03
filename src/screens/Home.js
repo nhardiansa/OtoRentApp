@@ -12,9 +12,14 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector, useDispatch} from 'react-redux';
-import {Box, Image as NBImage, Input} from 'native-base';
+import {Box, Image as NBImage, Input, Skeleton, useToast} from 'native-base';
 
-import {HOME_BANNER, CAR_PLACEHOLDER, BIKE_PLACEHOLDER} from '../assets/images';
+import {
+  HOME_BANNER,
+  CAR_PLACEHOLDER,
+  BIKE_PLACEHOLDER,
+  MOTORBIKE_PLACEHOLDER,
+} from '../assets/images';
 import {fontFamily, fontSize, fontStyle} from '../helpers/styleConstants';
 import {
   VEHICLE_DETAIL,
@@ -28,12 +33,19 @@ export default function Home({navigation}) {
   const {vehiclesReducer} = useSelector(state => state);
   const dispatch = useDispatch();
 
+  const toast = useToast();
+
   useEffect(() => {
-    console.log('Home');
-    console.log('baseURL', baseURL);
     getVehicles();
-    console.log('vehiclesReducer', vehiclesReducer);
   }, []);
+
+  useEffect(() => {
+    if (vehiclesReducer.error) {
+      toast.show({
+        description: vehiclesReducer.error,
+      });
+    }
+  }, [vehiclesReducer]);
 
   const getVehicles = async () => {
     dispatch(getVehiclesHome());
@@ -103,7 +115,7 @@ export default function Home({navigation}) {
       marginHorizontal: 11,
       borderRadius: 15,
     },
-    listContainer: {
+    listContain40er: {
       marginTop: 20,
     },
     vehicleSection: {
@@ -112,9 +124,14 @@ export default function Home({navigation}) {
   });
 
   const vehicleCard = imgSrc => {
+    let srcImg = imgSrc;
+    if (typeof imgSrc === 'string') {
+      srcImg = imgSrc.replace('http://localhost:5000', baseURL);
+      srcImg = {uri: srcImg};
+    }
     return (
       <Pressable onPress={goToDetail}>
-        <Image resizeMode="cover" style={styles.item} source={imgSrc} />
+        <Image resizeMode="cover" style={styles.item} source={srcImg} />
       </Pressable>
     );
   };
@@ -144,7 +161,7 @@ export default function Home({navigation}) {
 
         <View style={styles.contentContainer}>
           <View style={styles.vehicleSection}>
-            <View style={styles.sectionHeader}>
+            <Box flexDir="row" justifyContent="space-between" px="5" mb="5">
               <Text style={[styles.text, styles.heading]}>Cars</Text>
               <TouchableOpacity
                 onPress={goToViewMore}
@@ -152,51 +169,79 @@ export default function Home({navigation}) {
                 <Text style={[styles.link, styles.text]}>View more</Text>
                 <Icon name="chevron-right" size={18} />
               </TouchableOpacity>
-            </View>
+            </Box>
             <View style={styles.container}>
-              <FlatList
-                data={vehicles}
-                renderItem={({item}) => vehicleCard(item.src)}
-                horizontal={true}
-                contentContainerStyle={styles.listContainer}
-                showsHorizontalScrollIndicator={false}
-              />
+              {vehiclesReducer.loading && !vehiclesReducer.error ? (
+                <Box w="full" px="5" mt="5">
+                  <Skeleton h="40" width="full" />
+                </Box>
+              ) : (
+                <FlatList
+                  data={vehiclesReducer.cars}
+                  renderItem={({item}) =>
+                    vehicleCard(item.image || CAR_PLACEHOLDER)
+                  }
+                  horizontal={true}
+                  contentContainerStyle={styles.listContainer}
+                  showsHorizontalScrollIndicator={false}
+                />
+              )}
             </View>
           </View>
           <View style={styles.vehicleSection}>
-            <View style={styles.sectionHeader}>
+            <Box flexDir="row" justifyContent="space-between" px="5" mb="5">
               <Text style={[styles.text, styles.heading]}>Motorbikes</Text>
-              <TouchableOpacity style={styles.linkContainer}>
+              <TouchableOpacity
+                onPress={goToViewMore}
+                style={styles.linkContainer}>
                 <Text style={[styles.link, styles.text]}>View more</Text>
                 <Icon name="chevron-right" size={18} />
               </TouchableOpacity>
-            </View>
+            </Box>
             <View style={styles.container}>
-              <FlatList
-                data={vehicles}
-                renderItem={({item}) => vehicleCard(item.src)}
-                horizontal={true}
-                contentContainerStyle={styles.listContainer}
-                showsHorizontalScrollIndicator={false}
-              />
+              {vehiclesReducer.loading && !vehiclesReducer.error ? (
+                <Box w="full" px="5" mt="5">
+                  <Skeleton h="40" width="full" />
+                </Box>
+              ) : (
+                <FlatList
+                  data={vehiclesReducer.motorcycles}
+                  renderItem={({item}) =>
+                    vehicleCard(item.image || MOTORBIKE_PLACEHOLDER)
+                  }
+                  horizontal={true}
+                  contentContainerStyle={styles.listContainer}
+                  showsHorizontalScrollIndicator={false}
+                />
+              )}
             </View>
           </View>
           <View style={styles.vehicleSection}>
-            <View style={styles.sectionHeader}>
+            <Box flexDir="row" justifyContent="space-between" px="5" mb="5">
               <Text style={[styles.text, styles.heading]}>Bikes</Text>
-              <TouchableOpacity style={styles.linkContainer}>
+              <TouchableOpacity
+                onPress={goToViewMore}
+                style={styles.linkContainer}>
                 <Text style={[styles.link, styles.text]}>View more</Text>
                 <Icon name="chevron-right" size={18} />
               </TouchableOpacity>
-            </View>
+            </Box>
             <View style={styles.container}>
-              <FlatList
-                data={bikes}
-                renderItem={({item}) => vehicleCard(item.src)}
-                horizontal={true}
-                contentContainerStyle={styles.listContainer}
-                showsHorizontalScrollIndicator={false}
-              />
+              {vehiclesReducer.loading && !vehiclesReducer.error ? (
+                <Box w="full" px="5" mt="5">
+                  <Skeleton h="40" width="full" />
+                </Box>
+              ) : (
+                <FlatList
+                  data={vehiclesReducer.bikes}
+                  renderItem={({item}) =>
+                    vehicleCard(item.image || BIKE_PLACEHOLDER)
+                  }
+                  horizontal={true}
+                  contentContainerStyle={styles.listContainer}
+                  showsHorizontalScrollIndicator={false}
+                />
+              )}
             </View>
           </View>
         </View>

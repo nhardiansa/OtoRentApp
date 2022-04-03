@@ -1,4 +1,10 @@
-import {SET_ERROR, SET_LOADING, SET_MOTORCYCLES} from '../types/vehicles';
+import {
+  SET_BIKES,
+  SET_CARS,
+  SET_ERROR,
+  SET_LOADING,
+  SET_MOTORCYCLES,
+} from '../types/vehicles';
 import {axiosInstance} from '../../helpers/http';
 
 export const getVehiclesHome = () => {
@@ -14,18 +20,30 @@ export const getVehiclesHome = () => {
         payload: true,
       });
 
-      const {data} = await axiosInstance().get(
+      const motorcyles = await axiosInstance().get(
         '/vehicles/filter?category_id=3',
       );
+      const cars = await axiosInstance().get('/vehicles/filter?category_id=2');
+      const bikes = await axiosInstance().get('/vehicles/filter?category_id=4');
+
+      dispatch({
+        type: SET_MOTORCYCLES,
+        payload: motorcyles.data.results,
+      });
+
+      dispatch({
+        type: SET_CARS,
+        payload: cars.data.results,
+      });
+
+      dispatch({
+        type: SET_BIKES,
+        payload: bikes.data.results,
+      });
 
       dispatch({
         type: SET_LOADING,
         payload: false,
-      });
-
-      dispatch({
-        type: SET_MOTORCYCLES,
-        payload: data.results,
       });
     } catch (err) {
       console.error(err);
@@ -33,10 +51,18 @@ export const getVehiclesHome = () => {
         type: SET_LOADING,
         payload: false,
       });
-      dispatch({
-        type: SET_ERROR,
-        payload: err.message,
-      });
+
+      if (err.response) {
+        dispatch({
+          type: SET_ERROR,
+          payload: err.response.data.message,
+        });
+      } else {
+        dispatch({
+          type: SET_ERROR,
+          payload: err.message,
+        });
+      }
     }
   };
 };
