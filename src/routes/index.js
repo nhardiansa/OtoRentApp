@@ -25,12 +25,13 @@ export default function Routes() {
   const {authReducer, userReducer} = useSelector(state => state);
 
   useEffect(() => {
+    // resetStore();
     if (authReducer.user) {
       const {token} = authReducer.user;
       setTokenToStorage(token);
 
       if (!userReducer.profile) {
-        dispatch(setUserProfile());
+        dispatch(setUserProfile(token));
       }
     }
   }, [authReducer]);
