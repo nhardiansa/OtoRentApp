@@ -6,6 +6,7 @@ import vehiclesReducer from './vehicles';
 import authReducer from './auth';
 import processReducer from './process';
 import transactionReducer from './transaction';
+import userReducer from './user';
 
 const persistConfig = {
   key: 'auth',
@@ -16,5 +17,6 @@ export default combineReducers({
   vehiclesReducer,
   processReducer,
   transactionReducer,
+  userReducer,
   authReducer: persistReducer(persistConfig, authReducer),
 });
