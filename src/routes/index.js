@@ -11,7 +11,9 @@ import VehicleDetail from '../screens/VehicleDetail';
 import {PAYMENT_STACK, VEHICLE_DETAIL} from '../helpers/destinationConstants';
 import PaymentStack from './PaymentStack';
 import AuthStack from './AuthStack';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {setUserProfile} from '../redux/actions/userActions';
 // import reduxStore from '../redux/store';
 
 const MainStack = createNativeStackNavigator();
@@ -19,12 +21,26 @@ const MainStack = createNativeStackNavigator();
 // const {persistor, store} = reduxStore();
 
 export default function Routes() {
-  const {authReducer} = useSelector(state => state);
+  const dispatch = useDispatch();
+  const {authReducer, userReducer} = useSelector(state => state);
 
   useEffect(() => {
-    console.log('authReducer routes', authReducer);
-    // resetStore();
-  }, []);
+    if (authReducer.user) {
+      const {token} = authReducer.user;
+      setTokenToStorage(token);
+
+      if (!userReducer.profile) {
+        dispatch(setUserProfile());
+      }
+    }
+  }, [authReducer]);
+
+  const setTokenToStorage = async token => {
+    const savedToken = await AsyncStorage.getItem('token');
+    if (!savedToken) {
+      await AsyncStorage.setItem('token', token);
+    }
+  };
 
   // const resetStore = async () => {
   //   await persistor.purge();
