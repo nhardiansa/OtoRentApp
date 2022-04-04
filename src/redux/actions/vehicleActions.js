@@ -66,3 +66,43 @@ export const getVehiclesHome = () => {
     }
   };
 };
+
+export const getVehicleDetail = id => {
+  return async dispatch => {
+    try {
+      dispatch({
+        type: SET_ERROR,
+        payload: '',
+      });
+      dispatch({
+        type: SET_LOADING,
+        payload: true,
+      });
+
+      const {data} = await axiosInstance().get(`/vehicles/${id}`);
+
+      dispatch({
+        type: 'SET_DETAIL',
+        payload: data.results,
+      });
+
+      dispatch({
+        type: SET_LOADING,
+        payload: false,
+      });
+    } catch (err) {
+      console.error(err);
+      if (err.response) {
+        dispatch({
+          type: SET_ERROR,
+          payload: err.response.data.message,
+        });
+      } else {
+        dispatch({
+          type: SET_ERROR,
+          payload: err.message,
+        });
+      }
+    }
+  };
+};

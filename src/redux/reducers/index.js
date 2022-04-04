@@ -4,6 +4,8 @@ import {persistReducer} from 'redux-persist';
 
 import vehiclesReducer from './vehicles';
 import authReducer from './auth';
+import processReducer from './process';
+import transactionReducer from './transaction';
 
 const persistConfig = {
   key: 'auth',
@@ -12,5 +14,7 @@ const persistConfig = {
 
 export default combineReducers({
   vehiclesReducer,
+  processReducer,
+  transactionReducer,
   authReducer: persistReducer(persistConfig, authReducer),
 });

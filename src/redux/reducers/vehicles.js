@@ -63,6 +63,13 @@ const vehiclesReducer = (state = initialState, action) => {
       };
     }
 
+    case 'SET_DETAIL': {
+      state.vehicle = action.payload;
+      return {
+        ...state,
+      };
+    }
+
     default: {
       return state;
     }
