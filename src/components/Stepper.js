@@ -51,6 +51,7 @@ const Stepper = ({currentlyActive, count, weight = ITEM_WH, ...rest}) => {
           {[...Array(count - 1)].map((o, i) => {
             return (
               <LinearGradient
+                key={i}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
                 colors={
@@ -66,6 +67,7 @@ const Stepper = ({currentlyActive, count, weight = ITEM_WH, ...rest}) => {
         {[...Array(count)].map((o, i) => {
           return (
             <LinearGradient
+              key={i}
               start={{x: 0, y: 0}}
               end={{x: 1, y: 0}}
               colors={

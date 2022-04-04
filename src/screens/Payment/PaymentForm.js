@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Actionsheet, Box, Input, Pressable, Select} from 'native-base';
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
@@ -8,7 +8,7 @@ import Stepper from '../../components/Stepper';
 import {GET_PAYMENT_CODE} from '../../helpers/destinationConstants';
 import {colors} from '../../helpers/styleConstants';
 
-export default function PaymentForm({navigation}) {
+export default function PaymentForm({navigation, route}) {
   const [paymentMethod, setPaymentMethod] = React.useState('');
   const [showPaymentMethod, setShowPaymentMethod] = React.useState(false);
 
@@ -18,6 +18,10 @@ export default function PaymentForm({navigation}) {
       marginRight: 12,
     },
   });
+
+  useEffect(() => {
+    console.log(route.params);
+  }, []);
 
   const getPaymentCode = () => {
     console.log('Get Payment Code');

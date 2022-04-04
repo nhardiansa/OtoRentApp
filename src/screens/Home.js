@@ -78,9 +78,10 @@ export default function Home({navigation}) {
     navigation.navigate(VIEW_MORE_SCREEN);
   };
 
-  const goToDetail = () => {
+  const goToDetail = id => {
+    console.log(id);
     console.log('Go to Detail');
-    navigation.navigate(VEHICLE_DETAIL);
+    navigation.navigate(VEHICLE_DETAIL, {id});
   };
 
   const styles = StyleSheet.create({
@@ -123,14 +124,14 @@ export default function Home({navigation}) {
     },
   });
 
-  const vehicleCard = imgSrc => {
+  const vehicleCard = (imgSrc, id) => {
     let srcImg = imgSrc;
     if (typeof imgSrc === 'string') {
       srcImg = imgSrc.replace('http://localhost:5000', baseURL);
       srcImg = {uri: srcImg};
     }
     return (
-      <Pressable onPress={goToDetail}>
+      <Pressable onPress={() => goToDetail(id)}>
         <Image resizeMode="cover" style={styles.item} source={srcImg} />
       </Pressable>
     );
@@ -179,7 +180,7 @@ export default function Home({navigation}) {
                 <FlatList
                   data={vehiclesReducer.cars}
                   renderItem={({item}) =>
-                    vehicleCard(item.image || CAR_PLACEHOLDER)
+                    vehicleCard(item.image || CAR_PLACEHOLDER, item.id)
                   }
                   horizontal={true}
                   contentContainerStyle={styles.listContainer}
@@ -207,7 +208,7 @@ export default function Home({navigation}) {
                 <FlatList
                   data={vehiclesReducer.motorcycles}
                   renderItem={({item}) =>
-                    vehicleCard(item.image || MOTORBIKE_PLACEHOLDER)
+                    vehicleCard(item.image || MOTORBIKE_PLACEHOLDER, item.id)
                   }
                   horizontal={true}
                   contentContainerStyle={styles.listContainer}
@@ -235,7 +236,7 @@ export default function Home({navigation}) {
                 <FlatList
                   data={vehiclesReducer.bikes}
                   renderItem={({item}) =>
-                    vehicleCard(item.image || BIKE_PLACEHOLDER)
+                    vehicleCard(item.image || BIKE_PLACEHOLDER, item.id)
                   }
                   horizontal={true}
                   contentContainerStyle={styles.listContainer}

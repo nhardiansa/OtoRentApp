@@ -7,7 +7,7 @@ import {
   TextInput,
   TouchableHighlight,
 } from 'react-native';
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 
 import BackSection from '../components/BackSection';
 import CustomButton from '../components/CustomButton';
@@ -22,11 +22,24 @@ import {
   fontSize,
   fontStyle,
 } from '../helpers/styleConstants';
-import {Box, ScrollView, Stack, Select} from 'native-base';
+import {Box, ScrollView, Stack, useToast, Text as NVText} from 'native-base';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 import {PAYMENT_STACK} from '../helpers/destinationConstants';
+import {useDispatch, useSelector} from 'react-redux';
+import {getVehicleDetail} from '../redux/actions/vehicleActions';
+import {capitalize, normalizeUrl} from '../helpers/formatter';
 
-export default function VehicleDetail({navigation}) {
+const dateOptions = {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+};
+
+export default function VehicleDetail({route, navigation}) {
+  const dispatch = useDispatch();
+  const {vehiclesReducer} = useSelector(state => state);
+  const {vehicle} = vehiclesReducer;
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: '',
@@ -34,26 +47,91 @@ export default function VehicleDetail({navigation}) {
     });
   }, [navigation]);
 
+  const {id: vehicleId} = route.params;
+  const toast = useToast();
   const [date, setDate] = useState(new Date());
   const [dateChanged, setDateChanged] = useState(false);
   const [countDay, setCountDay] = useState('');
+  const [countRent, setCountRent] = useState(0);
+
+  useEffect(() => {
+    if (!vehicleId) {
+      navigation.goBack();
+      return;
+    }
+
+    dispatch(getVehicleDetail(vehicleId));
+
+    console.log(vehiclesReducer);
+  }, [vehicleId]);
 
   const increaseItem = () => {
-    console.log('Add Item');
+    const limit = vehicle.qty - vehicle.booked;
+
+    if (countRent === limit) {
+      return;
+    }
+    setCountRent(countRent + 1);
   };
 
   const decreaseItem = () => {
-    console.log('Remove Item');
+    if (countRent <= 0) {
+      return;
+    }
+    setCountRent(countRent - 1);
   };
 
   const countDayChange = e => {
+    const value = parseInt(e);
+
+    if (value < 1) {
+      setCountDay(1);
+      return;
+    }
+
+    const idtoast = 'countDayChange';
+    if (value > 30) {
+      setCountDay(30);
+      if (!toast.isActive(idtoast)) {
+        toast.show({
+          id: idtoast,
+          description: 'Maximum 30 days',
+        });
+      }
+      return;
+    }
+
     setCountDay(e);
   };
 
   const dateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
+    if (event.type !== 'set') {
+      return;
+    }
+
+    const toastDanger = 'toast-danger';
+    if (selectedDate < date) {
+      if (toast.isActive(toastDanger)) {
+        return;
+      }
+      toast.show({
+        id: toastDanger,
+        render: () => (
+          <Box bg="error.500" px="2" py="1" rounded="sm" mb={5}>
+            <NVText
+              color="white"
+              fontSize="md"
+              fontFamily={fontStyle(fontFamily.primary)}>
+              Date cannot be earlier than today's date.
+            </NVText>
+          </Box>
+        ),
+      });
+      return;
+    }
+
     setDateChanged(true);
-    setDate(currentDate);
+    setDate(selectedDate);
   };
 
   const showMode = async () => {
@@ -70,8 +148,54 @@ export default function VehicleDetail({navigation}) {
   };
 
   const doReservation = () => {
-    console.log('Reservation');
-    navigation.navigate(PAYMENT_STACK);
+    if (vehicle.booked === vehicle.qty) {
+      const idtoast = 'full booked';
+      if (!toast.isActive(idtoast)) {
+        toast.show({
+          id: idtoast,
+          description: 'Vehicle is full booked',
+        });
+      }
+      return;
+    }
+
+    if (countDay < 1) {
+      const idtoast = 'summary';
+      if (!toast.isActive(idtoast)) {
+        toast.show({
+          id: idtoast,
+          description: 'Input the number of rental days',
+        });
+      }
+      return;
+    }
+
+    if (countRent < 1) {
+      const idtoast = 'summary countRent';
+      if (!toast.isActive(idtoast)) {
+        toast.show({
+          id: idtoast,
+          description: 'Input the number of rental items',
+        });
+      }
+      return;
+    }
+
+    const startDate = new Date(date).toISOString().split('T')[0];
+    const endDate = new Date(
+      new Date(date).setDate(date.getDate() + parseInt(countDay)),
+    )
+      .toISOString()
+      .split('T')[0];
+
+    const tempData = {
+      vehicle_id: vehicle.id,
+      qty: countRent,
+      start_rent: startDate,
+      end_rent: endDate,
+    };
+
+    navigation.navigate(PAYMENT_STACK, {data: {...tempData}});
   };
 
   const styles = StyleSheet.create({
@@ -145,7 +269,7 @@ export default function VehicleDetail({navigation}) {
     },
     availableText: {
       fontFamily: fontStyle(fontFamily.primary, 'bold'),
-      color: colors.green,
+      color: vehicle.booked === vehicle.qty ? colors.red : colors.green,
     },
     locationWrapper: {
       marginTop: 16,
@@ -224,95 +348,125 @@ export default function VehicleDetail({navigation}) {
   });
 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <Stack style={styles.headerWrapper}>
-          <View style={styles.imageWrapper}>
-            <Image source={CAR_PLACEHOLDER} style={styles.image} />
-          </View>
-          <View style={[globalStyle.container, styles.header]}>
-            <BackSection
-              textStyle={styles.backText}
-              iconStyle={styles.backIcon}
-              onPress={goBack}
-            />
-            <View style={styles.rightSection}>
-              <Text style={styles.ratingText}>
-                4.5 <FAIcon name="star" style={styles.starIcon} />
-              </Text>
-            </View>
-          </View>
-        </Stack>
+    <>
+      {Object.keys(vehicle).length > 0 && (
+        <SafeAreaView>
+          <ScrollView>
+            <Stack style={styles.headerWrapper}>
+              <View style={styles.imageWrapper}>
+                <Image
+                  source={
+                    vehicle.image
+                      ? normalizeUrl(vehicle.image)
+                      : CAR_PLACEHOLDER
+                  }
+                  style={styles.image}
+                />
+              </View>
+              <View style={[globalStyle.container, styles.header]}>
+                <BackSection
+                  textStyle={styles.backText}
+                  iconStyle={styles.backIcon}
+                  onPress={goBack}
+                />
+                <View style={styles.rightSection}>
+                  <Text style={styles.ratingText}>
+                    4.5 <FAIcon name="star" style={styles.starIcon} />
+                  </Text>
+                </View>
+              </View>
+            </Stack>
 
-        <Stack style={globalStyle.container}>
-          <Box style={[styles.detailHeadWrapper]}>
-            <Box>
-              <Text style={styles.textPricing}>Vespa Matic</Text>
-              <Text style={styles.textPricing}>
-                Rp. {Number('100000').toLocaleString()}/day
-              </Text>
-            </Box>
-            <Box style={styles.heartIconWrapper}>
-              <FAIcon name="heart" style={styles.heartIcon} />
-            </Box>
-          </Box>
-          <Box style={styles.descWrapper}>
-            <Text style={styles.desc}>Max for 2 person</Text>
-            <Text style={styles.desc}>No prepayment</Text>
-            <Text style={[styles.desc, styles.availableText]}>Available</Text>
-          </Box>
+            <Stack style={globalStyle.container}>
+              <Box style={[styles.detailHeadWrapper]}>
+                <Box>
+                  <Text style={styles.textPricing}>
+                    {capitalize(vehicle.name)}
+                  </Text>
+                  <Text style={styles.textPricing}>
+                    Rp. {Number(vehicle.price).toLocaleString()}/day
+                  </Text>
+                </Box>
+                <Box style={styles.heartIconWrapper}>
+                  <FAIcon name="heart" style={styles.heartIcon} />
+                </Box>
+              </Box>
+              <Box style={styles.descWrapper}>
+                <Text style={styles.desc}>
+                  Max for {vehicle.capacity} person
+                </Text>
+                <NVText
+                  fontFamily={fontStyle(fontFamily.primary)}
+                  fontSize="md"
+                  color="gray.500">
+                  {Number(vehicle.prepayment)
+                    ? 'Can be prepayment'
+                    : 'No prepayment'}
+                </NVText>
+                <Text style={[styles.desc, styles.availableText]}>
+                  {vehicle.booked === vehicle.qty
+                    ? 'Not Available'
+                    : 'Available'}
+                </Text>
+              </Box>
 
-          <Box style={styles.locationWrapper}>
-            <FAIcon name="map-marker" style={styles.mapMarker} />
-            <Text style={styles.location}>Jakarta</Text>
-          </Box>
+              <Box style={styles.locationWrapper}>
+                <FAIcon name="map-marker" style={styles.mapMarker} />
+                <Text style={styles.location}>
+                  {capitalize(vehicle.location)}
+                </Text>
+              </Box>
 
-          <Box style={styles.counterSection}>
-            <Text style={styles.counterText}>Select vehicles</Text>
-            <Box style={styles.counterWrapper}>
-              <TouchableHighlight
-                onPress={increaseItem}
-                underlayColor={colors.primaryDark}
-                style={styles.counterBtn}>
-                <FAIcon name="minus" style={styles.counterIcon} />
-              </TouchableHighlight>
-              <Text style={styles.countNumber}>2</Text>
-              <TouchableHighlight
-                onPress={decreaseItem}
-                underlayColor={colors.primaryDark}
-                style={styles.counterBtn}>
-                <FAIcon name="plus" style={styles.counterIcon} />
-              </TouchableHighlight>
-            </Box>
-          </Box>
+              <Box style={styles.counterSection}>
+                <Text style={styles.counterText}>Select vehicles</Text>
+                <Box style={styles.counterWrapper}>
+                  <TouchableHighlight
+                    onPress={decreaseItem}
+                    underlayColor={colors.primaryDark}
+                    style={styles.counterBtn}>
+                    <FAIcon name="minus" style={styles.counterIcon} />
+                  </TouchableHighlight>
+                  <Text style={styles.countNumber}>{countRent}</Text>
+                  <TouchableHighlight
+                    onPress={increaseItem}
+                    underlayColor={colors.primaryDark}
+                    style={styles.counterBtn}>
+                    <FAIcon name="plus" style={styles.counterIcon} />
+                  </TouchableHighlight>
+                </Box>
+              </Box>
 
-          <Box style={styles.datePickerWrapper}>
-            <TouchableHighlight
-              style={styles.datePicker}
-              underlayColor="rgba(0,0,0,0.2)"
-              onPress={showMode}>
-              <Text>
-                {dateChanged ? `${date.toLocaleDateString()}` : 'Select date'}
-              </Text>
-            </TouchableHighlight>
-            <Box style={styles.countDay}>
-              <TextInput
-                style={styles.countInput}
-                onChangeText={countDayChange}
-                keyboardType="number-pad"
-                value={countDay}
-                placeholder="1"
-              />
-              <Text style={styles.placeholder}>Day</Text>
-            </Box>
-          </Box>
-          <CustomButton
-            onPress={doReservation}
-            styleContainer={styles.reservationBtn}>
-            Reservation
-          </CustomButton>
-        </Stack>
-      </ScrollView>
-    </SafeAreaView>
+              <Box style={styles.datePickerWrapper}>
+                <TouchableHighlight
+                  style={styles.datePicker}
+                  underlayColor="rgba(0,0,0,0.2)"
+                  onPress={showMode}>
+                  <Text>
+                    {dateChanged
+                      ? `${date.toLocaleDateString('id-ID', dateOptions)}`
+                      : 'Select date'}
+                  </Text>
+                </TouchableHighlight>
+                <Box style={styles.countDay}>
+                  <TextInput
+                    style={styles.countInput}
+                    onChangeText={countDayChange}
+                    keyboardType="number-pad"
+                    value={countDay.toString()}
+                    placeholder="0"
+                  />
+                  <Text style={styles.placeholder}>Day</Text>
+                </Box>
+              </Box>
+              <CustomButton
+                onPress={doReservation}
+                styleContainer={styles.reservationBtn}>
+                Reservation
+              </CustomButton>
+            </Stack>
+          </ScrollView>
+        </SafeAreaView>
+      )}
+    </>
   );
 }
