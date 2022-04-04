@@ -1,12 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {baseURL} from '../helpers/constants';
 
-export const axiosInstance = (useToken = false, useBaseURL = true) => {
+export const axiosInstance = (token, useBaseURL = true) => {
   const headers = {};
 
-  if (useToken) {
-    const {token} = AsyncStorage.getItem('user');
+  if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
 
