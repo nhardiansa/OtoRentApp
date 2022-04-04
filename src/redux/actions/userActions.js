@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {axiosInstance} from '../../helpers/http';
 import {PROCESS_ERROR, PROCESS_LOADING, SET_PROFILE} from '../types';
 
-export const setUserProfile = () => {
+export const setUserProfile = token => {
   return async dispatch => {
     try {
       dispatch({
@@ -10,7 +10,7 @@ export const setUserProfile = () => {
         payload: true,
       });
 
-      const token = await AsyncStorage.getItem('token');
+      // const token = await AsyncStorage.getItem('token');
       const {data} = await axiosInstance(token).get('/users/profile');
 
       dispatch({
