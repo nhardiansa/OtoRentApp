@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useLayoutEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   FINISH_PAYMENT,
@@ -11,15 +11,25 @@ import PaymentForm from '../screens/Payment/PaymentForm';
 import BackSection from '../components/BackSection';
 import GetPaymentCode from '../screens/Payment/GetPaymentCode';
 import FinishPayment from '../screens/Payment/FinishPayment';
+import {useSelector} from 'react-redux';
+import {useEffect} from 'react';
 
 const Payment = createNativeStackNavigator();
 
 export default function PaymentStack({navigation}) {
-  React.useLayoutEffect(() => {
+  const {userReducer} = useSelector(state => state);
+
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, [navigation]);
+
+  useEffect(() => {
+    if (!userReducer.profile) {
+      navigation.goBack();
+    }
+  }, []);
 
   const styles = StyleSheet.create({
     headerStyle: {
