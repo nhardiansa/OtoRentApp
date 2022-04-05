@@ -1,10 +1,11 @@
-import {View, Text} from 'react-native';
+import {} from 'react-native';
 import React from 'react';
+import {Box, Text} from 'native-base';
 
 export default function DetailTransaction() {
   return (
-    <View>
+    <Box>
       <Text>DetailTransaction</Text>
-    </View>
+    </Box>
   );
 }

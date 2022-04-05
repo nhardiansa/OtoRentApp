@@ -156,6 +156,7 @@ export default function VehicleDetail({route, navigation}) {
         toast.show({
           id: idtoast,
           description: 'Vehicle is full booked',
+          duration: 1000,
         });
       }
       return;
@@ -167,6 +168,7 @@ export default function VehicleDetail({route, navigation}) {
         toast.show({
           id: idtoast,
           description: 'Input the number of rental days',
+          duration: 1000,
         });
       }
       return;
@@ -178,6 +180,7 @@ export default function VehicleDetail({route, navigation}) {
         toast.show({
           id: idtoast,
           description: 'Input the number of rental items',
+          duration: 1000,
         });
       }
       return;
@@ -199,7 +202,7 @@ export default function VehicleDetail({route, navigation}) {
 
     dispatch(setDataToSend(tempData));
 
-    navigation.navigate(PAYMENT_STACK);
+    navigation.push(PAYMENT_STACK);
   };
 
   const styles = StyleSheet.create({

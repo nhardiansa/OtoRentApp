@@ -8,7 +8,11 @@ import IOIcon from 'react-native-vector-icons/Ionicons';
 import Profile from '../screens/Profile/Profile';
 import SearchResult from '../screens/Search/SearchResult';
 import History from '../screens/Payment/History';
-import {HOME_SCREEN, SEARCH_SCREEN} from '../helpers/destinationConstants';
+import {
+  HOME_SCREEN,
+  SEARCH_SCREEN,
+  SEARCH_STACK,
+} from '../helpers/destinationConstants';
 import {colors} from '../helpers/styleConstants';
 import HomeTab from './HomeTab';
 import SearchStack from './SearchStack';
@@ -40,7 +44,7 @@ export default function BottomTab({navigation}) {
         }}
       />
       <BottomStack.Screen
-        name={SEARCH_SCREEN}
+        name={SEARCH_STACK}
         component={SearchStack}
         options={{
           tabBarIcon: ({color, size}) => (

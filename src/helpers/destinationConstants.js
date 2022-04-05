@@ -7,6 +7,7 @@ export const VIEW_MORE_SCREEN = 'viewMore';
 
 export const FILTER_SCREEN = 'filter';
 export const SEARCH_SCREEN = 'search';
+export const SEARCH_STACK = 'searchStack';
 
 export const VEHICLE_DETAIL = 'VehicleDetail';
 
