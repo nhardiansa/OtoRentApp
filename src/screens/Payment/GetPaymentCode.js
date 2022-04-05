@@ -34,13 +34,6 @@ export default function GetPaymentCode({navigation}) {
 
   const [placeHolder, setPlaceHolder] = useState(CAR_PLACEHOLDER);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title: '',
-      headerLeft: () => <BackSection onPress={() => navigation.goBack()} />,
-    });
-  }, [navigation]);
-
   useEffect(() => {
     if (!transactionReducer.dataToSend) {
       navigation.goBack();

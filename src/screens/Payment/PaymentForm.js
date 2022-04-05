@@ -28,7 +28,7 @@ export default function PaymentForm({navigation, route}) {
 
   const getPaymentCode = () => {
     console.log('Get Payment Code');
-    navigation.replace(GET_PAYMENT_CODE);
+    navigation.navigate(GET_PAYMENT_CODE);
   };
 
   const seePaymentMethod = () => {

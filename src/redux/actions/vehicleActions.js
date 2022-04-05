@@ -4,6 +4,7 @@ import {
   SET_ERROR,
   SET_LOADING,
   SET_MOTORCYCLES,
+  SET_VEHICLE,
 } from '../types/vehicles';
 import {axiosInstance} from '../../helpers/http';
 
@@ -82,7 +83,7 @@ export const getVehicleDetail = id => {
       const {data} = await axiosInstance().get(`/vehicles/${id}`);
 
       dispatch({
-        type: 'SET_DETAIL',
+        type: SET_VEHICLE,
         payload: data.results,
       });
 

@@ -9,14 +9,26 @@ import BackSection from '../../components/BackSection';
 import {useDispatch, useSelector} from 'react-redux';
 import {axiosInstance} from '../../helpers/http';
 import moment from 'moment';
-import {PAYMENT_DETAIL} from '../../helpers/destinationConstants';
+import {
+  BOTTOM_TAB,
+  HISTORY_SCREEN,
+  PAYMENT_DETAIL,
+} from '../../helpers/destinationConstants';
 import {payTransaction} from '../../redux/actions/transactionActions';
 
 export default function FinishPayment({navigation}) {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: '',
-      headerLeft: () => <BackSection onPress={() => navigation.goBack()} />,
+      headerLeft: () => (
+        <BackSection
+          onPress={() =>
+            navigation.navigate(BOTTOM_TAB, {
+              screen: HISTORY_SCREEN,
+            })
+          }
+        />
+      ),
     });
   }, [navigation]);
 

@@ -16,3 +16,7 @@ export const PAYMENT_FORM = 'PaymentForm';
 export const PAYMENT_DETAIL = 'PaymentDetail';
 export const GET_PAYMENT_CODE = 'GetPaymentCode';
 export const FINISH_PAYMENT = 'FinishPayment';
+
+export const HISTORY_SCREEN = 'History';
+
+export const BOTTOM_TAB = 'BottomTab';

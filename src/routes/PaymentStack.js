@@ -6,6 +6,8 @@ import {
   GET_PAYMENT_CODE,
   PAYMENT_FORM,
   PAYMENT_DETAIL,
+  VEHICLE_DETAIL,
+  HOME_SCREEN,
 } from '../helpers/destinationConstants';
 
 import PaymentForm from '../screens/Payment/PaymentForm';
@@ -14,8 +16,12 @@ import GetPaymentCode from '../screens/Payment/GetPaymentCode';
 import FinishPayment from '../screens/Payment/FinishPayment';
 import {useDispatch, useSelector} from 'react-redux';
 import {useEffect} from 'react';
-import {clearDataToSend} from '../redux/actions/transactionActions';
+import {
+  clearDataToSend,
+  clearTransactionDetail,
+} from '../redux/actions/transactionActions';
 import DetailTransaction from '../screens/Payment/DetailTransaction';
+import {SET_VEHICLE} from '../redux/types/vehicles';
 
 const Payment = createNativeStackNavigator();
 
@@ -36,8 +42,24 @@ export default function PaymentStack({navigation}) {
 
     return () => {
       dispatch(clearDataToSend());
+      dispatch(clearTransactionDetail());
+      dispatch({
+        type: SET_VEHICLE,
+        payload: {},
+      });
     };
   }, []);
+
+  useEffect(() => {
+    if (transactionReducer.details) {
+      const {payment} = transactionReducer.details;
+      if (Number(payment)) {
+        navigation.replace(PAYMENT_DETAIL);
+      } else {
+        navigation.replace(FINISH_PAYMENT);
+      }
+    }
+  }, [transactionReducer.details]);
 
   const styles = StyleSheet.create({
     headerStyle: {
@@ -49,12 +71,15 @@ export default function PaymentStack({navigation}) {
     <Payment.Navigator
       screenOptions={{
         title: '',
-        headerLeft: () => <BackSection onPress={() => navigation.goBack()} />,
+        headerLeft: () => (
+          <BackSection onPress={() => navigation.navigate(HOME_SCREEN)} />
+        ),
         headerStyle: styles.headerStyle,
         headerShadowVisible: false,
       }}>
       <Payment.Screen name={PAYMENT_FORM} component={PaymentForm} />
       <Payment.Screen name={GET_PAYMENT_CODE} component={GetPaymentCode} />
+
       <Payment.Screen name={FINISH_PAYMENT} component={FinishPayment} />
       <Payment.Screen name={PAYMENT_DETAIL} component={DetailTransaction} />
     </Payment.Navigator>

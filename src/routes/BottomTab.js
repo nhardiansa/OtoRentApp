@@ -12,6 +12,7 @@ import {
   HOME_SCREEN,
   SEARCH_SCREEN,
   SEARCH_STACK,
+  HISTORY_SCREEN,
 } from '../helpers/destinationConstants';
 import {colors} from '../helpers/styleConstants';
 import HomeTab from './HomeTab';
@@ -53,7 +54,7 @@ export default function BottomTab({navigation}) {
         }}
       />
       <BottomStack.Screen
-        name="History"
+        name={HISTORY_SCREEN}
         component={History}
         options={{
           tabBarIcon: ({color, size}) => (

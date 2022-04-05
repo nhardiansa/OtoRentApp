@@ -38,6 +38,7 @@ const transactionReducer = (state = initialState, action) => {
 
     case SET_TRANSACTION_ERROR: {
       state.error = action.payload;
+      state.loading = false;
       return {...state};
     }
 

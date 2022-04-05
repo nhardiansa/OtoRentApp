@@ -7,6 +7,7 @@ import {
   SET_TRANSACTION_ERROR,
   SET_TRANSACTION_LOADING,
 } from '../types/transaction';
+import {SET_VEHICLE} from '../types/vehicles';
 
 export const setDataToSend = data => {
   return dispatch => {
@@ -104,5 +105,63 @@ export const payTransaction = (transactionId, token) => {
         });
       }
     }
+  };
+};
+export const getTransactionDetail = (transactionId, token) => {
+  return async dispatch => {
+    try {
+      dispatch({
+        type: SET_TRANSACTION_LOADING,
+        payload: true,
+      });
+
+      const trxDetail = await axiosInstance(token).get(
+        `/histories/${transactionId}`,
+      );
+
+      const vehicleId = trxDetail.data.results.vehicle_id;
+
+      const vehicleDetails = await axiosInstance().get(
+        `/vehicles/${vehicleId}`,
+      );
+
+      dispatch({
+        type: SET_TRANSACTION_DETAIL,
+        payload: trxDetail.data.results,
+      });
+
+      dispatch({
+        type: SET_VEHICLE,
+        payload: vehicleDetails.data.results,
+      });
+
+      dispatch({
+        type: SET_TRANSACTION_LOADING,
+        payload: false,
+      });
+    } catch (err) {
+      if (err.response) {
+        console.error(err.response);
+        dispatch({
+          type: SET_TRANSACTION_ERROR,
+          payload: err.response.data.error,
+        });
+      } else {
+        console.error(err);
+        dispatch({
+          type: SET_TRANSACTION_ERROR,
+          payload: err.message,
+        });
+      }
+    }
+  };
+};
+
+export const clearTransactionDetail = () => {
+  return dispatch => {
+    dispatch({
+      type: SET_TRANSACTION_DETAIL,
+      payload: null,
+    });
   };
 };

@@ -8,12 +8,18 @@ import Favorites from '../screens/Favorites';
 
 import BottomTab from './BottomTab';
 import VehicleDetail from '../screens/VehicleDetail';
-import {PAYMENT_STACK, VEHICLE_DETAIL} from '../helpers/destinationConstants';
+import {
+  BOTTOM_TAB,
+  HISTORY_SCREEN,
+  PAYMENT_STACK,
+  VEHICLE_DETAIL,
+} from '../helpers/destinationConstants';
 import PaymentStack from './PaymentStack';
 import AuthStack from './AuthStack';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {setUserProfile} from '../redux/actions/userActions';
+import History from '../screens/Payment/History';
 // import reduxStore from '../redux/store';
 
 const MainStack = createNativeStackNavigator();
@@ -60,7 +66,7 @@ export default function Routes() {
           />
         ) : (
           <>
-            <MainStack.Screen name="BottomTab" component={BottomTab} />
+            <MainStack.Screen name={BOTTOM_TAB} component={BottomTab} />
             <MainStack.Screen name="UpdateProfile" component={UpdateProfile} />
             <MainStack.Screen name="Favorites" component={Favorites} />
             <MainStack.Screen name={VEHICLE_DETAIL} component={VehicleDetail} />
