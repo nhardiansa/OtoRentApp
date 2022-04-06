@@ -29,12 +29,10 @@ export default function DetailTransaction({navigation}) {
     });
   }, [navigation]);
 
-  const {transactionReducer, vehiclesReducer, userReducer} = useSelector(
-    state => state,
-  );
+  const {transactionReducer, vehiclesReducer, userReducer} = useSelector(state => state);
 
   const {image: vehicleImage, name: vehicleName} = vehiclesReducer.vehicle;
-  const {loading: trxLoading, error: trxError} = transactionReducer;
+  // const {loading: trxLoading, error: trxError} = transactionReducer;
   const {
     payment_code,
     start_rent,
@@ -43,10 +41,11 @@ export default function DetailTransaction({navigation}) {
     total_paid: totalPaid,
     prepayment,
     vehicle_id: vehicleId,
-    id: transactionId,
-    payment: paymentStatus,
+    // id: transactionId,
+    // payment: paymentStatus,
   } = transactionReducer.details;
-  const {name: userName, email, phone, address} = userReducer.profile;
+  // const {name: userName, email, phone, address} = userReducer.profile;
+  const {name: userName, email, phone} = userReducer.profile;
 
   const [placeHolder, setPlaceHolder] = useState(CAR_PLACEHOLDER);
 

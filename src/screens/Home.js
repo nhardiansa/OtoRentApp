@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import {
   View,
   Text,
@@ -59,27 +59,27 @@ export default function Home({navigation}) {
     dispatch(getVehiclesHome());
   };
 
-  const vehicles = [
-    {
-      id: 1,
-      src: CAR_PLACEHOLDER,
-    },
-    {
-      id: 2,
-      src: CAR_PLACEHOLDER,
-    },
-  ];
+  // const vehicles = [
+  //   {
+  //     id: 1,
+  //     src: CAR_PLACEHOLDER,
+  //   },
+  //   {
+  //     id: 2,
+  //     src: CAR_PLACEHOLDER,
+  //   },
+  // ];
 
-  const bikes = [
-    {
-      id: 1,
-      src: BIKE_PLACEHOLDER,
-    },
-    {
-      id: 2,
-      src: BIKE_PLACEHOLDER,
-    },
-  ];
+  // const bikes = [
+  //   {
+  //     id: 1,
+  //     src: BIKE_PLACEHOLDER,
+  //   },
+  //   {
+  //     id: 2,
+  //     src: BIKE_PLACEHOLDER,
+  //   },
+  // ];
 
   const goToViewMore = () => {
     console.log('Go to View More');

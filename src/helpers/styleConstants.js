@@ -34,23 +34,23 @@ export const fontFamily = {
 
 export const fontStyle = (FontFamily, fontWeight) => {
   switch (fontWeight) {
-    case 'black': {
-      return `${FontFamily}-Black`;
-    }
-    case 'bold': {
-      return `${FontFamily}-Bold`;
-    }
-    case 'medium': {
-      return `${FontFamily}-Medium`;
-    }
-    case 'light': {
-      return `${FontFamily}-Light`;
-    }
-    case 'semiBold': {
-      return `${FontFamily}-SemiBold`;
-    }
-    default: {
-      return `${FontFamily}-Regular`;
-    }
+  case 'black': {
+    return `${FontFamily}-Black`;
+  }
+  case 'bold': {
+    return `${FontFamily}-Bold`;
+  }
+  case 'medium': {
+    return `${FontFamily}-Medium`;
+  }
+  case 'light': {
+    return `${FontFamily}-Light`;
+  }
+  case 'semiBold': {
+    return `${FontFamily}-SemiBold`;
+  }
+  default: {
+    return `${FontFamily}-Regular`;
+  }
   }
 };

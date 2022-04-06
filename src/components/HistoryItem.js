@@ -23,22 +23,22 @@ export default function HistoryItem({
   let vehicleStatus;
 
   switch (type) {
-    case 'car': {
-      placeholder = CAR_PLACEHOLDER;
-      break;
-    }
-    case 'motorbike': {
-      placeholder = MOTORBIKE_PLACEHOLDER;
-      break;
-    }
-    case 'bike': {
-      placeholder = BIKE_PLACEHOLDER;
-      break;
-    }
-    default: {
-      placeholder = CAR_PLACEHOLDER;
-      break;
-    }
+  case 'car': {
+    placeholder = CAR_PLACEHOLDER;
+    break;
+  }
+  case 'motorbike': {
+    placeholder = MOTORBIKE_PLACEHOLDER;
+    break;
+  }
+  case 'bike': {
+    placeholder = BIKE_PLACEHOLDER;
+    break;
+  }
+  default: {
+    placeholder = CAR_PLACEHOLDER;
+    break;
+  }
   }
 
   if (Number(paymentStatus)) {
