@@ -12,6 +12,7 @@ import {
 import {capitalize, normalizeUrl, priceFormat} from '../../helpers/formatter';
 import {colors, fontFamily, fontStyle} from '../../helpers/styleConstants';
 import moment from 'moment';
+import LoadingScreen from '../../components/LoadingScreen';
 
 export default function DetailTransaction({navigation}) {
   useLayoutEffect(() => {
@@ -32,7 +33,7 @@ export default function DetailTransaction({navigation}) {
   const {transactionReducer, vehiclesReducer, userReducer} = useSelector(state => state);
 
   const {image: vehicleImage, name: vehicleName} = vehiclesReducer.vehicle;
-  // const {loading: trxLoading, error: trxError} = transactionReducer;
+  const {loading: trxLoading, error: trxError} = transactionReducer;
   const {
     payment_code,
     start_rent,
@@ -71,99 +72,107 @@ export default function DetailTransaction({navigation}) {
   }, [transactionReducer, vehicleId, navigation, vehiclesReducer]);
 
   return (
-    <ScrollView>
-      <Box px="5" flex={1} bgColor="white" pt="5">
-        <Box>
-          <Text
-            fontSize="3xl"
-            textAlign="center"
-            color={colors.green}
-            fontFamily={fontStyle(fontFamily.primary, 'bold')}>
+    <>
+      {
+        trxLoading ? (
+          <LoadingScreen />
+        ) : (
+          <ScrollView>
+            <Box px="5" flex={1} bgColor="white" pt="5">
+              <Box>
+                <Text
+                  fontSize="3xl"
+                  textAlign="center"
+                  color={colors.green}
+                  fontFamily={fontStyle(fontFamily.primary, 'bold')}>
             Payment Success
-          </Text>
+                </Text>
 
-          <Image
-            mt="9"
-            source={vehicleImage ? normalizeUrl(vehicleImage) : placeHolder}
-            alt={vehicleName}
-            w="full"
-            h={56}
-            rounded="xl"
-          />
-        </Box>
-        <Box mt="7">
-          <Text
-            fontSize="xl"
-            fontFamily={fontStyle(fontFamily.primary, 'bold')}
-            textAlign="center">
+                <Image
+                  mt="9"
+                  source={vehicleImage ? normalizeUrl(vehicleImage) : placeHolder}
+                  alt={vehicleName}
+                  w="full"
+                  h={56}
+                  rounded="xl"
+                />
+              </Box>
+              <Box mt="7">
+                <Text
+                  fontSize="xl"
+                  fontFamily={fontStyle(fontFamily.primary, 'bold')}
+                  textAlign="center">
             Booking Code: {'\n'}
-            <Text color={colors.green}>{payment_code}</Text>
-          </Text>
-        </Box>
-        <Box mt="9">
-          <Text
-            color="gray.500"
-            fontSize="lg"
-            fontFamily={fontStyle(fontFamily.primary)}>
-            {qty + ' ' + capitalize(vehicleName)}
-          </Text>
-          <Text
-            mt="3"
-            color="gray.500"
-            fontSize="lg"
-            fontFamily={fontStyle(fontFamily.primary)}>
-            {prepayment ? priceFormat(prepayment) : 'No Prepayment'}
-          </Text>
-          <Text
-            mt="3"
-            color="gray.500"
-            fontSize="lg"
-            fontFamily={fontStyle(fontFamily.primary)}>
-            {(Date.parse(end_rent) - Date.parse(start_rent)) /
+                  <Text color={colors.green}>{payment_code}</Text>
+                </Text>
+              </Box>
+              <Box mt="9">
+                <Text
+                  color="gray.500"
+                  fontSize="lg"
+                  fontFamily={fontStyle(fontFamily.primary)}>
+                  {qty + ' ' + capitalize(vehicleName)}
+                </Text>
+                <Text
+                  mt="3"
+                  color="gray.500"
+                  fontSize="lg"
+                  fontFamily={fontStyle(fontFamily.primary)}>
+                  {prepayment ? priceFormat(prepayment) : 'No Prepayment'}
+                </Text>
+                <Text
+                  mt="3"
+                  color="gray.500"
+                  fontSize="lg"
+                  fontFamily={fontStyle(fontFamily.primary)}>
+                  {(Date.parse(end_rent) - Date.parse(start_rent)) /
               (1000 * 60 * 60 * 24)}
-            {(Date.parse(end_rent) - Date.parse(start_rent)) /
+                  {(Date.parse(end_rent) - Date.parse(start_rent)) /
               (1000 * 60 * 60 * 24) >
             1
-              ? ' Days'
-              : ' Day'}
-          </Text>
-          <Text
-            mt="3"
-            color="gray.500"
-            fontSize="lg"
-            fontFamily={fontStyle(fontFamily.primary)}>
-            {moment(start_rent).format('MMM D') +
+                    ? ' Days'
+                    : ' Day'}
+                </Text>
+                <Text
+                  mt="3"
+                  color="gray.500"
+                  fontSize="lg"
+                  fontFamily={fontStyle(fontFamily.primary)}>
+                  {moment(start_rent).format('MMM D') +
               ' to ' +
               moment(end_rent).format('MMM D YYYY')}
-          </Text>
-        </Box>
-        <Divider my="5" />
-        <Box>
-          <Text
-            mt="3"
-            color="gray.500"
-            fontSize="lg"
-            fontFamily={fontStyle(fontFamily.primary)}>
-            {userName} ({email})
-          </Text>
-          <Text
-            mt="3"
-            color="gray.500"
-            fontSize="lg"
-            fontFamily={fontStyle(fontFamily.primary)}>
-            {phone}
-          </Text>
-        </Box>
-        <Box mt="12" mb="7" bgColor={colors.primary} rounded="2xl" py="4">
-          <Text
-            fontFamily={fontStyle(fontFamily.primary, 'bold')}
-            textAlign="center"
-            color="white"
-            fontSize="2xl">
+                </Text>
+              </Box>
+              <Divider my="5" />
+              <Box>
+                <Text
+                  mt="3"
+                  color="gray.500"
+                  fontSize="lg"
+                  fontFamily={fontStyle(fontFamily.primary)}>
+                  {userName} ({email})
+                </Text>
+                <Text
+                  mt="3"
+                  color="gray.500"
+                  fontSize="lg"
+                  fontFamily={fontStyle(fontFamily.primary)}>
+                  {phone}
+                </Text>
+              </Box>
+              <Box mt="12" mb="7" bgColor={colors.primary} rounded="2xl" py="4">
+                <Text
+                  fontFamily={fontStyle(fontFamily.primary, 'bold')}
+                  textAlign="center"
+                  color="white"
+                  fontSize="2xl">
             Total Rp {priceFormat(totalPaid)}
-          </Text>
-        </Box>
-      </Box>
-    </ScrollView>
+                </Text>
+              </Box>
+            </Box>
+          </ScrollView>
+        )
+      }
+    </>
   );
 }

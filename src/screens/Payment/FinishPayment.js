@@ -33,7 +33,7 @@ export default function FinishPayment({navigation}) {
   }, [navigation]);
 
   const dispatch = useDispatch();
-  const {transactionReducer, authReducer} = useSelector(state => state);
+  const {transactionReducer, authReducer, vehiclesReducer} = useSelector(state => state);
   const {
     payment_code,
     start_rent,
@@ -41,16 +41,18 @@ export default function FinishPayment({navigation}) {
     qty,
     total_paid: totalPaid,
     prepayment,
-    vehicle_id: vehicleId,
+    // vehicle_id: vehicleId,
     id: transactionId,
     payment: paymentStatus,
   } = transactionReducer.details;
   const {token} = authReducer.user;
+  const vehicleDetails = vehiclesReducer.vehicle;
+  const {loading: isLoading, error} = transactionReducer;
 
   const toast = useToast();
-  const [vehicleDetails, setVehicleDetails] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  // const [vehicleDetails, setVehicleDetails] = useState({});
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [error, setError] = useState('');
 
   useEffect(() => {
     if (!transactionReducer.details) {
@@ -64,50 +66,62 @@ export default function FinishPayment({navigation}) {
   }, [transactionReducer.details]);
 
   useEffect(() => {
-    console.log('vehicleDetails', vehicleDetails);
-
-    if (Object.keys(vehicleDetails).length < 1) {
-      getVehicleDetails();
+    if (error) {
+      toast.show({
+        description: error,
+        title: 'Error',
+        duration: 3000,
+        placement: 'top',
+        status: 'error',
+      });
     }
-  }, [vehicleDetails]);
+  }, [error]);
 
-  const getVehicleDetails = async () => {
-    try {
-      const {data} = await axiosInstance().get(`/vehicles/${vehicleId}`);
+  // useEffect(() => {
+  //   console.log('vehicleDetails', vehicleDetails);
 
-      if (!data.status) {
-        setError(data.message);
-        setIsLoading(false);
-        return;
-      }
+  //   if (Object.keys(vehicleDetails).length < 1) {
+  //     getVehicleDetails();
+  //   }
+  // }, [vehicleDetails]);
 
-      setVehicleDetails(data.results);
-      setIsLoading(false);
-    } catch (err) {
-      if (err.response) {
-        console.error(err.response);
-        toast.show({
-          description: err.response.data.message,
-          title: 'Error',
-          duration: 3000,
-          placement: 'top',
-          status: 'error',
-        });
-        setError(err.response.data.message);
-      } else {
-        console.error(err);
-        toast.show({
-          description: err.message,
-          duration: 3000,
-          title: 'Error',
-          placement: 'top',
-          status: 'error',
-        });
-        setError(err.message);
-      }
-      setIsLoading(false);
-    }
-  };
+  // const getVehicleDetails = async () => {
+  //   try {
+  //     const {data} = await axiosInstance().get(`/vehicles/${vehicleId}`);
+
+  //     if (!data.status) {
+  //       setError(data.message);
+  //       setIsLoading(false);
+  //       return;
+  //     }
+
+  //     setVehicleDetails(data.results);
+  //     setIsLoading(false);
+  //   } catch (err) {
+  //     if (err.response) {
+  //       console.error(err.response);
+  //       toast.show({
+  //         description: err.response.data.message,
+  //         title: 'Error',
+  //         duration: 3000,
+  //         placement: 'top',
+  //         status: 'error',
+  //       });
+  //       setError(err.response.data.message);
+  //     } else {
+  //       console.error(err);
+  //       toast.show({
+  //         description: err.message,
+  //         duration: 3000,
+  //         title: 'Error',
+  //         placement: 'top',
+  //         status: 'error',
+  //       });
+  //       setError(err.message);
+  //     }
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const finishPaymentHandler = () => {
     dispatch(payTransaction(transactionId, token));
@@ -208,7 +222,7 @@ export default function FinishPayment({navigation}) {
               fontSize="md"
               fontFamily={fontStyle(fontFamily.primary)}>
               Order details : {'\n'}
-              {qty} {vehicleDetails.name ? capitalize(vehicleDetails.name) : ''}{' '}
+              {qty} {capitalize(vehicleDetails.name)}{' '}
               {'\n'}
               {prepayment
                 ? `Prepayment ${priceFormat(prepayment)}`
@@ -216,7 +230,9 @@ export default function FinishPayment({navigation}) {
               {'\n'}
               {(Date.parse(end_rent) - Date.parse(start_rent)) /
                 (1000 * 60 * 60 * 24)}{' '}
-              days {'\n'}
+              {
+                ((Date.parse(end_rent) - Date.parse(start_rent)) / (1000 * 60 * 60 * 24)) > 1 ? 'days' : 'day'
+              } {'\n'}
               {moment(start_rent).format('MMM DD') +
                 ' to ' +
                 moment(end_rent).format('MMM DD YYYY')}

@@ -126,13 +126,13 @@ export const getTransactionDetail = (transactionId, token) => {
       );
 
       dispatch({
-        type: SET_TRANSACTION_DETAIL,
-        payload: trxDetail.data.results,
+        type: SET_VEHICLE,
+        payload: vehicleDetails.data.results,
       });
 
       dispatch({
-        type: SET_VEHICLE,
-        payload: vehicleDetails.data.results,
+        type: SET_TRANSACTION_DETAIL,
+        payload: trxDetail.data.results,
       });
 
       dispatch({
