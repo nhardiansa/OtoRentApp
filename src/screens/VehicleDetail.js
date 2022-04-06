@@ -26,7 +26,10 @@ import {Box, ScrollView, Stack, useToast, Text as NVText} from 'native-base';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 import {PAYMENT_STACK} from '../helpers/destinationConstants';
 import {useDispatch, useSelector} from 'react-redux';
-import {getVehicleDetail} from '../redux/actions/vehicleActions';
+import {
+  clearVehicleDetail,
+  getVehicleDetail,
+} from '../redux/actions/vehicleActions';
 import {capitalize, normalizeUrl, priceFormat} from '../helpers/formatter';
 import moment from 'moment';
 import {setDataToSend} from '../redux/actions/transactionActions';
@@ -49,7 +52,7 @@ export default function VehicleDetail({route, navigation}) {
     });
   }, [navigation]);
 
-  const {id: vehicleId} = route.params;
+  // const {id: vehicleId} = route.params;
   const toast = useToast();
   const [date, setDate] = useState(new Date());
   const [dateChanged, setDateChanged] = useState(false);
@@ -57,15 +60,19 @@ export default function VehicleDetail({route, navigation}) {
   const [countRent, setCountRent] = useState(0);
 
   useEffect(() => {
-    if (!vehicleId) {
-      navigation.goBack();
-      return;
-    }
+    // if (!vehicleId) {
+    //   navigation.goBack();
+    //   return;
+    // }
 
-    dispatch(getVehicleDetail(vehicleId));
+    // dispatch(getVehicleDetail());
 
     console.log(vehiclesReducer);
-  }, [vehicleId]);
+
+    return () => {
+      dispatch(clearVehicleDetail());
+    };
+  }, []);
 
   const increaseItem = () => {
     const limit = vehicle.qty - vehicle.booked;

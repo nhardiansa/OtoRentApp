@@ -107,3 +107,12 @@ export const getVehicleDetail = id => {
     }
   };
 };
+
+export const clearVehicleDetail = () => {
+  return dispatch => {
+    dispatch({
+      type: SET_VEHICLE,
+      payload: {},
+    });
+  };
+};
