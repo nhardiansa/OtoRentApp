@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Actionsheet, Box, Input, Pressable, Select} from 'native-base';
 
 import FAIcon from 'react-native-vector-icons/FontAwesome';
@@ -7,10 +7,13 @@ import CustomButton from '../../components/CustomButton';
 import Stepper from '../../components/Stepper';
 import {GET_PAYMENT_CODE} from '../../helpers/destinationConstants';
 import {colors} from '../../helpers/styleConstants';
+import {useSelector} from 'react-redux';
 
 export default function PaymentForm({navigation, route}) {
-  const [paymentMethod, setPaymentMethod] = React.useState('');
-  const [showPaymentMethod, setShowPaymentMethod] = React.useState(false);
+  const {userReducer} = useSelector(state => state);
+  const {name, email, phone} = userReducer.profile;
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [showPaymentMethod, setShowPaymentMethod] = useState(false);
 
   const styles = StyleSheet.create({
     dropDownIcon: {
@@ -20,7 +23,7 @@ export default function PaymentForm({navigation, route}) {
   });
 
   useEffect(() => {
-    console.log(route.params);
+    console.log(userReducer);
   }, []);
 
   const getPaymentCode = () => {
@@ -33,6 +36,34 @@ export default function PaymentForm({navigation, route}) {
     setShowPaymentMethod(true);
   };
 
+  const selectPaymentMethod = itemValue => {
+    setPaymentMethod(itemValue);
+    setShowPaymentMethod(false);
+  };
+
+  const paymentMethods = [
+    {
+      id: 1,
+      name: 'Cash',
+    },
+    {
+      id: 2,
+      name: 'Credit Card',
+    },
+    {
+      id: 3,
+      name: 'Debit Card',
+    },
+    {
+      id: 4,
+      name: 'GOPAY',
+    },
+    {
+      id: 5,
+      name: 'DANA',
+    },
+  ];
+
   return (
     <>
       <Box
@@ -44,14 +75,32 @@ export default function PaymentForm({navigation, route}) {
         justifyContent="space-between">
         <Box>
           <Stepper mb="12" count={3} currentlyActive={1} />
-          <Input placeholder="Name" />
-          <Input placeholder="Email" mt={4} />
-          <Input placeholder="Phone" mt={4} />
+          <Input
+            placeholder="Name"
+            bgColor="gray.300"
+            value={name}
+            isDisabled={true}
+          />
+          <Input
+            placeholder="Email"
+            value={email}
+            bgColor="gray.300"
+            isDisabled={true}
+            mt={4}
+          />
+          <Input
+            placeholder="Phone"
+            value={phone}
+            bgColor="gray.300"
+            isDisabled={true}
+            mt={4}
+          />
           <Pressable onPress={seePaymentMethod} mt={4}>
             <Input
               isDisabled={true}
               bgColor={colors.gray}
               placeholder="Payment Method"
+              value={paymentMethod}
               InputRightElement={
                 <FAIcon name="caret-down" style={styles.dropDownIcon} />
               }
@@ -71,14 +120,16 @@ export default function PaymentForm({navigation, route}) {
               _dark={{
                 color: 'gray.300',
               }}>
-              Albums
+              Payment Methods
             </Text>
           </Box>
-          <Actionsheet.Item>Delete</Actionsheet.Item>
-          <Actionsheet.Item>Share</Actionsheet.Item>
-          <Actionsheet.Item>Play</Actionsheet.Item>
-          <Actionsheet.Item>Favourite</Actionsheet.Item>
-          <Actionsheet.Item>Cancel</Actionsheet.Item>
+          {paymentMethods.map(item => (
+            <Actionsheet.Item
+              onPress={() => selectPaymentMethod(item.name)}
+              key={item.id}>
+              {item.name}
+            </Actionsheet.Item>
+          ))}
         </Actionsheet.Content>
       </Actionsheet>
     </>

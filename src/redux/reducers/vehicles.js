@@ -5,6 +5,7 @@ import {
   SET_ERROR,
   SET_LOADING,
   SET_MOTORCYCLES,
+  SET_VEHICLE,
 } from '../types/vehicles';
 
 const initialState = {
@@ -63,7 +64,7 @@ const vehiclesReducer = (state = initialState, action) => {
       };
     }
 
-    case 'SET_DETAIL': {
+    case SET_VEHICLE: {
       state.vehicle = action.payload;
       return {
         ...state,

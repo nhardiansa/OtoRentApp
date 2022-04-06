@@ -27,7 +27,9 @@ import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 import {PAYMENT_STACK} from '../helpers/destinationConstants';
 import {useDispatch, useSelector} from 'react-redux';
 import {getVehicleDetail} from '../redux/actions/vehicleActions';
-import {capitalize, normalizeUrl} from '../helpers/formatter';
+import {capitalize, normalizeUrl, priceFormat} from '../helpers/formatter';
+import moment from 'moment';
+import {setDataToSend} from '../redux/actions/transactionActions';
 
 const dateOptions = {
   year: 'numeric',
@@ -154,6 +156,7 @@ export default function VehicleDetail({route, navigation}) {
         toast.show({
           id: idtoast,
           description: 'Vehicle is full booked',
+          duration: 1000,
         });
       }
       return;
@@ -165,6 +168,7 @@ export default function VehicleDetail({route, navigation}) {
         toast.show({
           id: idtoast,
           description: 'Input the number of rental days',
+          duration: 1000,
         });
       }
       return;
@@ -176,6 +180,7 @@ export default function VehicleDetail({route, navigation}) {
         toast.show({
           id: idtoast,
           description: 'Input the number of rental items',
+          duration: 1000,
         });
       }
       return;
@@ -195,7 +200,9 @@ export default function VehicleDetail({route, navigation}) {
       end_rent: endDate,
     };
 
-    navigation.navigate(PAYMENT_STACK, {data: {...tempData}});
+    dispatch(setDataToSend(tempData));
+
+    navigation.push(PAYMENT_STACK);
   };
 
   const styles = StyleSheet.create({
@@ -245,6 +252,7 @@ export default function VehicleDetail({route, navigation}) {
     },
     image: {
       width: '100%',
+      minHeight: 300,
     },
     detailHeadWrapper: {
       marginTop: 16,
@@ -384,7 +392,7 @@ export default function VehicleDetail({route, navigation}) {
                     {capitalize(vehicle.name)}
                   </Text>
                   <Text style={styles.textPricing}>
-                    Rp. {Number(vehicle.price).toLocaleString()}/day
+                    Rp. {priceFormat(vehicle.price)}/day
                   </Text>
                 </Box>
                 <Box style={styles.heartIconWrapper}>
@@ -443,7 +451,7 @@ export default function VehicleDetail({route, navigation}) {
                   onPress={showMode}>
                   <Text>
                     {dateChanged
-                      ? `${date.toLocaleDateString('id-ID', dateOptions)}`
+                      ? `${moment(date).format('DD MMMM YYYY')}`
                       : 'Select date'}
                   </Text>
                 </TouchableHighlight>

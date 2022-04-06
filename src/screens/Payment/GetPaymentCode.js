@@ -1,29 +1,88 @@
 import {} from 'react-native';
-import React from 'react';
+import React, {useLayoutEffect, useEffect, useState} from 'react';
 
 import BackSection from '../../components/BackSection';
 import {Box, Divider, Image, ScrollView, Text} from 'native-base';
 
-import {CAR_PLACEHOLDER} from '../../assets/images';
+import {
+  CAR_PLACEHOLDER,
+  MOTORBIKE_PLACEHOLDER,
+  BIKE_PLACEHOLDER,
+} from '../../assets/images';
 import CustomButton from '../../components/CustomButton';
 import Stepper from '../../components/Stepper';
 import {colors, fontFamily, fontStyle} from '../../helpers/styleConstants';
-import {priceFormat} from '../../helpers/formatter';
+import {capitalize, normalizeUrl, priceFormat} from '../../helpers/formatter';
 import {FINISH_PAYMENT} from '../../helpers/destinationConstants';
+import {useDispatch, useSelector} from 'react-redux';
+import moment from 'moment';
+import {createTransaction} from '../../redux/actions/transactionActions';
 
 export default function GetPaymentCode({navigation}) {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      title: '',
-      headerLeft: () => (
-        <BackSection title="Order Form" onPress={() => navigation.goBack()} />
-      ),
-    });
-  }, [navigation]);
+  const dispatch = useDispatch();
+  const {transactionReducer, vehiclesReducer, authReducer} = useSelector(
+    state => state,
+  );
+  const {
+    price,
+    name,
+    image,
+    category_name: categoryName,
+  } = vehiclesReducer.vehicle;
+  const {end_rent, start_rent, qty} = transactionReducer.dataToSend;
+  const {token} = authReducer.user;
+
+  const [placeHolder, setPlaceHolder] = useState(CAR_PLACEHOLDER);
+
+  useEffect(() => {
+    if (!transactionReducer.dataToSend) {
+      navigation.goBack();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (transactionReducer.details) {
+      navigation.replace(FINISH_PAYMENT);
+    }
+  }, [transactionReducer.details]);
+
+  useEffect(() => {
+    switch (categoryName) {
+      case 'motorbike': {
+        console.log('motorbikes');
+        if (MOTORBIKE_PLACEHOLDER !== placeHolder) {
+          setPlaceHolder(MOTORBIKE_PLACEHOLDER);
+        }
+        break;
+      }
+
+      case 'bike': {
+        if (BIKE_PLACEHOLDER !== placeHolder) {
+          setPlaceHolder(BIKE_PLACEHOLDER);
+        }
+        break;
+      }
+
+      default: {
+        if (CAR_PLACEHOLDER !== placeHolder) {
+          setPlaceHolder(CAR_PLACEHOLDER);
+        }
+      }
+    }
+  }, [placeHolder]);
 
   const finishPayment = () => {
     console.log('finish payment');
-    navigation.navigate(FINISH_PAYMENT);
+    const finalDataToSend = {
+      ...transactionReducer.dataToSend,
+      payment: 0,
+      returned: 0,
+      prepayment: 0,
+    };
+
+    dispatch(createTransaction(finalDataToSend, token));
+
+    // navigation.replace(FINISH_PAYMENT);
   };
 
   return (
@@ -34,9 +93,10 @@ export default function GetPaymentCode({navigation}) {
           resizeMode="cover"
           minHeight="48"
           w="full"
-          source={CAR_PLACEHOLDER}
+          source={image ? normalizeUrl(image) : placeHolder}
           rounded="lg"
           alignSelf="center"
+          alt="image placeholder"
         />
         <Box mt={12}>
           <Text
@@ -44,7 +104,7 @@ export default function GetPaymentCode({navigation}) {
             fontSize="lg"
             mb={3}
             color={colors.grayDark}>
-            2 Vespa
+            {qty} {capitalize(name)}
           </Text>
           <Text
             fontFamily={fontStyle(fontFamily.primary)}
@@ -58,14 +118,17 @@ export default function GetPaymentCode({navigation}) {
             fontSize="lg"
             mb={3}
             color={colors.grayDark}>
-            4 Days
+            {(Date.parse(end_rent) - Date.parse(start_rent)) /
+              (1000 * 60 * 60 * 24)}{' '}
+            Days
           </Text>
           <Text
             fontFamily={fontStyle(fontFamily.primary)}
             fontSize="lg"
             mb={3}
             color={colors.grayDark}>
-            Jan 18 2021 to Jan 22 2021
+            {moment(start_rent).format('MMM D')} to{' '}
+            {moment(end_rent).format('MMM D YYYY')}
           </Text>
         </Box>
         <Divider mt={5} mb="9" />
@@ -73,7 +136,7 @@ export default function GetPaymentCode({navigation}) {
           mb={8}
           fontSize="4xl"
           fontFamily={fontStyle(fontFamily.primary, 'bold')}>
-          Rp {priceFormat(100000)}
+          Rp {priceFormat(qty * price)}
         </Text>
 
         <CustomButton onPress={finishPayment}> Get Payment Code </CustomButton>
