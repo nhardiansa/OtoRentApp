@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, Image, StyleSheet, Pressable} from 'react-native';
 import {Box, VStack} from 'native-base';
 import Fa5Icon from 'react-native-vector-icons/FontAwesome5';
@@ -9,7 +9,23 @@ import {
   fontStyle,
 } from '../helpers/styleConstants';
 
-const ItemCard = ({onPress, name, image, styleContainer, ...containerRest}) => {
+import {
+  MOTORBIKE_PLACEHOLDER,
+  CAR_PLACEHOLDER,
+  BIKE_PLACEHOLDER,
+} from '../assets/images';
+import {normalizeUrl} from '../helpers/formatter';
+
+const ItemCard = ({
+  onPress,
+  name,
+  image,
+  styleContainer,
+  location,
+  vehicleType,
+  price,
+  ...containerRest
+}) => {
   const styles = StyleSheet.create({
     container: {
       elevation: 2,
@@ -17,6 +33,7 @@ const ItemCard = ({onPress, name, image, styleContainer, ...containerRest}) => {
     },
     image: {
       width: '100%',
+      minHeight: 168,
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
     },
@@ -61,12 +78,34 @@ const ItemCard = ({onPress, name, image, styleContainer, ...containerRest}) => {
     },
   });
 
+  const [vehicleImage, setVehicleImage] = useState(CAR_PLACEHOLDER);
+
+  useEffect(() => {
+    if (image) {
+      setVehicleImage(normalizeUrl(image));
+      return;
+    }
+    switch (vehicleType) {
+      case 'motorbike': {
+        setVehicleImage(MOTORBIKE_PLACEHOLDER);
+        break;
+      }
+      case 'bike': {
+        setVehicleImage(BIKE_PLACEHOLDER);
+        break;
+      }
+      default: {
+        setVehicleImage(CAR_PLACEHOLDER);
+      }
+    }
+  }, [vehicleType]);
+
   return (
     <Pressable onPress={onPress}>
       <Box style={[styles.container, styleContainer]} {...containerRest}>
         <VStack>
           <Box>
-            <Image source={image} style={styles.image} />
+            <Image source={vehicleImage} style={styles.image} />
           </Box>
           <Box style={styles.detailWrapper}>
             <Box style={styles.location}>
@@ -76,7 +115,7 @@ const ItemCard = ({onPress, name, image, styleContainer, ...containerRest}) => {
                 style={styles.locationIcon}
                 color={colors.red}
               />
-              <Text style={styles.locationText}>Makassar</Text>
+              <Text style={styles.locationText}>{location}</Text>
             </Box>
             <Box style={styles.pricing}>
               <Box>
@@ -84,7 +123,7 @@ const ItemCard = ({onPress, name, image, styleContainer, ...containerRest}) => {
                 <Text style={styles.isAvailable}>Available</Text>
               </Box>
               <Text style={styles.price}>
-                {Number('100000').toLocaleString('id-ID')}/day
+                Rp. {Number(price).toLocaleString('id-ID')}/day
               </Text>
             </Box>
           </Box>

@@ -5,8 +5,13 @@ import {
   SET_LOADING,
   SET_MOTORCYCLES,
   SET_VEHICLE,
+  SET_VEHICLES,
+  SET_QUERY,
+  SET_LOADING_MORE,
+  CLEAR_VEHICLES,
 } from '../types/vehicles';
 import {axiosInstance} from '../../helpers/http';
+import qs from 'query-string';
 
 export const getVehiclesHome = () => {
   return async dispatch => {
@@ -21,11 +26,33 @@ export const getVehiclesHome = () => {
         payload: true,
       });
 
+      const motorcylesParams = qs.stringify({
+        category_id: 3,
+        available: true,
+        limit: 4,
+      });
+      const carsParams = qs.stringify({
+        category_id: 2,
+        available: true,
+        limit: 4,
+      });
+      const bikesParams = qs.stringify({
+        category_id: 4,
+        available: true,
+        limit: 4,
+      });
+
+      console.log(motorcylesParams);
+
       const motorcyles = await axiosInstance().get(
-        '/vehicles/filter?category_id=3',
+        '/vehicles/filter' + '?' + motorcylesParams,
       );
-      const cars = await axiosInstance().get('/vehicles/filter?category_id=2');
-      const bikes = await axiosInstance().get('/vehicles/filter?category_id=4');
+      const cars = await axiosInstance().get(
+        '/vehicles/filter' + '?' + carsParams,
+      );
+      const bikes = await axiosInstance().get(
+        '/vehicles/filter' + '?' + bikesParams,
+      );
 
       dispatch({
         type: SET_MOTORCYCLES,
@@ -114,5 +141,113 @@ export const clearVehicleDetail = () => {
       type: SET_VEHICLE,
       payload: {},
     });
+  };
+};
+
+export const setQuery = data => {
+  return dispatch => {
+    dispatch({
+      type: SET_QUERY,
+      payload: data,
+    });
+  };
+};
+
+export const setVehicleList = query => {
+  return async dispatch => {
+    try {
+      dispatch({
+        type: SET_ERROR,
+        payload: '',
+      });
+      dispatch({
+        type: SET_LOADING,
+        payload: true,
+      });
+      dispatch({
+        type: CLEAR_VEHICLES,
+      });
+
+      for (const key in query) {
+        if (query[key] === '') {
+          delete query[key];
+        }
+      }
+
+      const params = qs.stringify({
+        ...query,
+        limit: 8,
+        available: 1,
+      });
+
+      const {data} = await axiosInstance().get(`/vehicles/filter?${params}`);
+
+      dispatch({
+        type: SET_VEHICLES,
+        payload: data,
+      });
+
+      dispatch({
+        type: SET_LOADING,
+        payload: false,
+      });
+    } catch (err) {
+      if (err.response) {
+        console.error(err.response);
+        dispatch({
+          type: SET_ERROR,
+          payload: err.response.data.message,
+        });
+      } else {
+        console.error(err);
+        dispatch({
+          type: SET_ERROR,
+          payload: err.message,
+        });
+      }
+    }
+  };
+};
+
+export const loadMoreVehicles = uri => {
+  return async dispatch => {
+    try {
+      dispatch({
+        type: SET_ERROR,
+        payload: '',
+      });
+      dispatch({
+        type: SET_LOADING_MORE,
+        payload: true,
+      });
+
+      const params = uri.split('?')[1];
+
+      const {data} = await axiosInstance().get(`/vehicles/filter?${params}`);
+
+      dispatch({
+        type: SET_VEHICLES,
+        payload: data,
+      });
+
+      dispatch({
+        type: SET_LOADING_MORE,
+        payload: false,
+      });
+    } catch (err) {
+      if (err.response) {
+        console.error(err.response);
+        dispatch({
+          type: SET_ERROR,
+          payload: err.response.data.message,
+        });
+      } else {
+        console.error(err);
+        dispatch({
+          type: SET_ERROR,
+          payload: err.message,
+        });
+      }
+    }
   };
 };
