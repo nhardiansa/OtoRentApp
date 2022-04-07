@@ -1,3 +1,5 @@
+import { AUTH_LOGOUT } from "../types/auth";
+
 const initialState = {
   user: null,
   isLoading: false,
@@ -40,8 +42,11 @@ const authReducer = (state = initialState, action) => {
       };
     }
 
-    case 'CLEAR_ALL': {
-      return state;
+    case AUTH_LOGOUT: {
+      return {
+        ...state,
+        user: null,
+      };
     }
 
     default: {

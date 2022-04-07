@@ -20,3 +20,7 @@ export const FINISH_PAYMENT = 'FinishPayment';
 export const HISTORY_SCREEN = 'History';
 
 export const BOTTOM_TAB = 'BottomTab';
+
+export const PROFILE_STACK = 'ProfileStack';
+export const PROFILE_SCREEN = 'ProfileScreen';
+export const UPDATE_PROFILE = 'UpdateProfile';

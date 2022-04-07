@@ -1,5 +1,7 @@
 import {axiosInstance} from '../../helpers/http';
 import qs from 'query-string';
+import { AUTH_LOGOUT } from '../types/auth';
+import { CLEAR_PROFILE } from '../types';
 
 export const onLogin = (username, password) => {
   return async dispatch => {
@@ -30,8 +32,9 @@ export const onLogin = (username, password) => {
   };
 };
 
-export const clearAll = () => {
+export const logOut = () => {
   return dispatch => {
-    dispatch({type: 'CLEAR_ALL'});
+    dispatch({type: AUTH_LOGOUT});
+    dispatch({type: CLEAR_PROFILE});
   };
 };
