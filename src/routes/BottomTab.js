@@ -5,18 +5,17 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import MAIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IOIcon from 'react-native-vector-icons/Ionicons';
 
-import Profile from '../screens/Profile/Profile';
-import SearchResult from '../screens/Search/SearchResult';
 import History from '../screens/Payment/History';
 import {
   HOME_SCREEN,
-  SEARCH_SCREEN,
   SEARCH_STACK,
   HISTORY_SCREEN,
+  PROFILE_STACK,
 } from '../helpers/destinationConstants';
 import {colors} from '../helpers/styleConstants';
 import HomeTab from './HomeTab';
 import SearchStack from './SearchStack';
+import ProfileStack from './ProfileStack';
 
 const BottomStack = createBottomTabNavigator();
 
@@ -63,8 +62,8 @@ export default function BottomTab({navigation}) {
         }}
       />
       <BottomStack.Screen
-        name="Profile"
-        component={Profile}
+        name={PROFILE_STACK}
+        component={ProfileStack}
         options={{
           tabBarIcon: ({color, size}) => (
             <IOIcon name="person" color={color} size={size} />

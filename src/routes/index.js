@@ -67,7 +67,6 @@ export default function Routes() {
         ) : (
           <>
             <MainStack.Screen name={BOTTOM_TAB} component={BottomTab} />
-            <MainStack.Screen name="UpdateProfile" component={UpdateProfile} />
             <MainStack.Screen name="Favorites" component={Favorites} />
             <MainStack.Screen name={VEHICLE_DETAIL} component={VehicleDetail} />
             <MainStack.Screen name={PAYMENT_STACK} component={PaymentStack} />

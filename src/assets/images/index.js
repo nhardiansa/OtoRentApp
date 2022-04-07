@@ -7,3 +7,5 @@ export const HOME_BANNER = require('./home-banner.png');
 export const MOTORBIKE_PLACEHOLDER = require('./motorbike-placeholder.png');
 export const BIKE_PLACEHOLDER = require('./bike-placeholder.png');
 export const CAR_PLACEHOLDER = require('./car-placeholder.png');
+
+export const PROFILE_PLACEHOLDER = require('./profile-placeholder.png');
