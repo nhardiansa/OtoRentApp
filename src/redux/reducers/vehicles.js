@@ -10,6 +10,7 @@ import {
   SET_VEHICLES,
   SET_LOADING_MORE,
   CLEAR_VEHICLES,
+  SET_DATA_TO_FILTER,
 } from '../types/vehicles';
 
 const initialState = {
@@ -25,6 +26,9 @@ const initialState = {
   bikes: [],
 
   query: {},
+
+  categories: [],
+  locations: [],
 };
 
 const vehiclesReducer = (state = initialState, action) => {
@@ -104,6 +108,14 @@ const vehiclesReducer = (state = initialState, action) => {
     case CLEAR_VEHICLES: {
       state.vehicles = [];
       state.pageInfo = {};
+      return {
+        ...state,
+      };
+    }
+
+    case SET_DATA_TO_FILTER: {
+      state.categories = action.payload.categories;
+      state.locations = action.payload.locations;
       return {
         ...state,
       };

@@ -14,3 +14,5 @@ export const SET_BIKES = 'SET_BIKES';
 export const SET_QUERY = 'SET_VEHICLE_QUERY';
 
 export const CLEAR_VEHICLES = 'CLEAR_VEHICLES';
+
+export const SET_DATA_TO_FILTER = 'SET_DATA_TO_FILTER_VEHICLE';

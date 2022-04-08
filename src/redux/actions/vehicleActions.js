@@ -9,6 +9,7 @@ import {
   SET_QUERY,
   SET_LOADING_MORE,
   CLEAR_VEHICLES,
+  SET_DATA_TO_FILTER,
 } from '../types/vehicles';
 import {axiosInstance} from '../../helpers/http';
 import qs from 'query-string';
@@ -232,6 +233,49 @@ export const loadMoreVehicles = uri => {
 
       dispatch({
         type: SET_LOADING_MORE,
+        payload: false,
+      });
+    } catch (err) {
+      if (err.response) {
+        console.error(err.response);
+        dispatch({
+          type: SET_ERROR,
+          payload: err.response.data.message,
+        });
+      } else {
+        console.error(err);
+        dispatch({
+          type: SET_ERROR,
+          payload: err.message,
+        });
+      }
+    }
+  };
+};
+
+export const setDataForSearch = () => {
+  return async dispatch => {
+    try {
+      dispatch({
+        type: SET_LOADING,
+        payload: true,
+      });
+
+      const categories = await axiosInstance().get('/categories');
+      const locations = await axiosInstance().get('/vehicles/location');
+
+      const data = {
+        categories: categories.data.results,
+        locations: locations.data.results,
+      };
+
+      dispatch({
+        type: SET_DATA_TO_FILTER,
+        payload: data,
+      });
+
+      dispatch({
+        type: SET_LOADING,
         payload: false,
       });
     } catch (err) {
