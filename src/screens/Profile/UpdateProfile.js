@@ -154,6 +154,61 @@ export default function UpdateProfile({navigation}) {
       if (response.didCancel) {
         return false;
       }
+
+      console.log('response', response);
+
+      if (response.assets[0].fileSize > 2097152) {
+        const id = 'image_size_error';
+        if (!toast.isActive(id)) {
+          toast.show({
+            id,
+            title: 'Error',
+            description: 'Image size must be less than 2MB',
+            status: 'error',
+            duration: 3000,
+            placement: 'top',
+          });
+        }
+
+        return;
+      }
+
+      const fileType = response.assets[0].type;
+      const validType = ['image/jpeg', 'image/png'];
+
+      if (!validType.includes(fileType)) {
+        const id = 'image_type_error';
+        if (!toast.isActive(id)) {
+          toast.show({
+            id,
+            title: 'Error',
+            description: 'Image type must be jpeg or png',
+            status: 'error',
+            duration: 3000,
+            placement: 'top',
+          });
+        }
+        return;
+      }
+
+      const height = response.assets[0].height;
+      const width = response.assets[0].width;
+
+      if (height < 200 || width < 200) {
+        const id = 'image_size_error';
+        if (!toast.isActive(id)) {
+          toast.show({
+            id,
+            title: 'Error',
+            description: 'Image size must be at least 200x200',
+            status: 'error',
+            duration: 3000,
+            placement: 'top',
+          });
+        }
+        return;
+      }
+
       const pickedImage = response.assets[0];
       setChangesData({
         ...changesData,
