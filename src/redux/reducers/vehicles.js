@@ -5,19 +5,30 @@ import {
   SET_ERROR,
   SET_LOADING,
   SET_MOTORCYCLES,
+  SET_QUERY,
   SET_VEHICLE,
+  SET_VEHICLES,
+  SET_LOADING_MORE,
+  CLEAR_VEHICLES,
+  SET_DATA_TO_FILTER,
 } from '../types/vehicles';
 
 const initialState = {
   vehicles: [],
   vehicle: {},
   loading: false,
+  loadMoreLoading: false,
   error: '',
   pageInfo: {},
 
   cars: [],
   motorcycles: [],
   bikes: [],
+
+  query: {},
+
+  categories: [],
+  locations: [],
 };
 
 const vehiclesReducer = (state = initialState, action) => {
@@ -66,6 +77,45 @@ const vehiclesReducer = (state = initialState, action) => {
 
     case SET_VEHICLE: {
       state.vehicle = action.payload;
+      return {
+        ...state,
+      };
+    }
+
+    case SET_QUERY: {
+      state.query = action.payload;
+      return {
+        ...state,
+      };
+    }
+
+    case SET_VEHICLES: {
+      const {results, pageInfo} = action.payload;
+      state.vehicles = [...state.vehicles, ...results];
+      state.pageInfo = pageInfo;
+      return {
+        ...state,
+      };
+    }
+
+    case SET_LOADING_MORE: {
+      state.loadMoreLoading = action.payload;
+      return {
+        ...state,
+      };
+    }
+
+    case CLEAR_VEHICLES: {
+      state.vehicles = [];
+      state.pageInfo = {};
+      return {
+        ...state,
+      };
+    }
+
+    case SET_DATA_TO_FILTER: {
+      state.categories = action.payload.categories;
+      state.locations = action.payload.locations;
       return {
         ...state,
       };
