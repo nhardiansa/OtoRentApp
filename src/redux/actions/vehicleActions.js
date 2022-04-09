@@ -154,7 +154,7 @@ export const setQuery = data => {
   };
 };
 
-export const setVehicleList = query => {
+export const setVehicleList = rawQuery => {
   return async dispatch => {
     try {
       dispatch({
@@ -169,6 +169,17 @@ export const setVehicleList = query => {
         type: CLEAR_VEHICLES,
       });
 
+      let query = rawQuery;
+
+      if (query.sorter) {
+        const value = query.sorter;
+        delete query.sorter;
+        for (const key in value) {
+          query[key] = value[key];
+        }
+      }
+      console.log('query', query);
+
       for (const key in query) {
         if (query[key] === '') {
           delete query[key];
@@ -181,11 +192,11 @@ export const setVehicleList = query => {
         available: 1,
       });
 
-      const {data} = await axiosInstance().get(`/vehicles/filter?${params}`);
+      const response = await axiosInstance().get(`/vehicles/filter?${params}`);
 
       dispatch({
         type: SET_VEHICLES,
-        payload: data,
+        payload: response.data,
       });
 
       dispatch({
@@ -293,5 +304,9 @@ export const setDataForSearch = () => {
         });
       }
     }
+    dispatch({
+      type: SET_LOADING,
+      payload: false,
+    });
   };
 };

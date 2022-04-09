@@ -24,11 +24,11 @@ import {
 } from '../helpers/styleConstants';
 import {Box, ScrollView, Stack, useToast, Text as NVText} from 'native-base';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
-import {PAYMENT_STACK} from '../helpers/destinationConstants';
+import {PAYMENT_STACK, SEARCH_SCREEN} from '../helpers/destinationConstants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   clearVehicleDetail,
-  getVehicleDetail,
+  setVehicleList,
 } from '../redux/actions/vehicleActions';
 import {capitalize, normalizeUrl, priceFormat} from '../helpers/formatter';
 import moment from 'moment';
@@ -43,7 +43,7 @@ const dateOptions = {
 export default function VehicleDetail({route, navigation}) {
   const dispatch = useDispatch();
   const {vehiclesReducer} = useSelector(state => state);
-  const {vehicle} = vehiclesReducer;
+  const {vehicle, query} = vehiclesReducer;
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -66,11 +66,16 @@ export default function VehicleDetail({route, navigation}) {
     // }
 
     // dispatch(getVehicleDetail());
+    if (Object.keys(vehicle).length < 1) {
+      navigation.goBack();
+      return;
+    }
 
-    console.log(vehiclesReducer);
+    console.log(route, 'route');
 
     return () => {
       dispatch(clearVehicleDetail());
+      dispatch(setVehicleList(query));
     };
   }, []);
 

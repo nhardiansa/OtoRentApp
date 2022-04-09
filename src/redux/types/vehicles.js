@@ -1,7 +1,7 @@
 export const SET_VEHICLES = 'GET_VEHICLES';
 
-export const SET_LOADING = 'SET_LOADING';
-export const SET_LOADING_MORE = 'SET_LOADING_MORE';
+export const SET_LOADING = 'SET_LOADING_VEHICLES';
+export const SET_LOADING_MORE = 'SET_LOADING_MORE_VEHICLES';
 
 export const SET_ERROR = 'SET_ERROR';
 
