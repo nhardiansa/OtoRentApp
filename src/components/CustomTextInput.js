@@ -2,10 +2,17 @@ import {StyleSheet, TextInput} from 'react-native';
 import React from 'react';
 import {fontFamily, fontSize, fontStyle} from '../helpers/styleConstants';
 
-export default function CustomTextInput({style, ...rest}) {
+export default function CustomTextInput({
+  style,
+  onChangeText,
+  onChange,
+  ...rest
+}) {
   return (
     <TextInput
       style={[styles.input, style]}
+      onChangeText={onChangeText}
+      onChange={onChange}
       {...rest}
       placeholderTextColor="white"
     />
