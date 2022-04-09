@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box, Heading, Spinner} from 'native-base';
 
-export default function LoadingScreen() {
+export default function LoadingScreen({title}) {
   return (
     <Box
       zIndex={1}
@@ -19,7 +19,7 @@ export default function LoadingScreen() {
         bgColor="white"
         justifyContent="center">
         <Spinner size="lg" color="warning.500" mr="3" />
-        <Heading>Loading...</Heading>
+        <Heading>{title || 'Loading...'}</Heading>
       </Box>
     </Box>
   );
