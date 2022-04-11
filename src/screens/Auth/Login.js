@@ -24,6 +24,7 @@ import {Box, Input, Pressable, useToast} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {onLogin as loginAction} from '../../redux/actions/authActions';
 import IOIcon from 'react-native-vector-icons/Ionicons';
+import LoadingScreen from '../../components/LoadingScreen';
 
 export default function Login({navigation}) {
   const {authReducer} = useSelector(state => state);
@@ -36,11 +37,20 @@ export default function Login({navigation}) {
 
   useEffect(() => {
     if (authReducer.error) {
-      toast.show({
-        description: authReducer.error,
-      });
+      const id = 'login-error';
+      if (!toast.isActive(id)) {
+        toast.show({
+          id,
+          title: 'Failed to login',
+          description: authReducer.error,
+          status: 'error',
+          duration: 3000,
+          placement: 'top',
+          isClosable: true,
+        });
+      }
     }
-  }, [authReducer]);
+  }, [authReducer.error]);
 
   const goToRegister = () => {
     console.log('sign up clicked');
@@ -68,61 +78,68 @@ export default function Login({navigation}) {
   };
 
   return (
-    <ImageBackground
-      source={LOGIN_BG}
-      resizeMode={'cover'}
-      style={styles.image}>
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.heading}>LET’S EXPLORE THE WORLD</Text>
-        <View>
-          {/* {/* <CustomTextInput placeholder="Username" /> */}
-          {/* <CustomTextInput style={styles.input} placeholder="Password" /> */}
-          <Input
-            onChangeText={text => setEmail(text)}
-            placeholder="Username"
-            bgColor="rgba(223, 222, 222, 0.3)"
-            fontFamily={fontStyle(fontFamily.primary, 'bold')}
-            placeholderTextColor={colors.white}
-            borderWidth={0}
-            color={colors.white}
-            mb="5"
-          />
-          <Input
-            onChangeText={text => setPassword(text)}
-            placeholder="Password"
-            bgColor="rgba(223, 222, 222, 0.3)"
-            fontFamily={fontStyle(fontFamily.primary, 'bold')}
-            placeholderTextColor={colors.white}
-            borderWidth={0}
-            color={colors.white}
-            secureTextEntry={showPassword}
-            InputRightElement={
-              <Box mr="4">
-                <Pressable onPress={() => setShowPassword(!showPassword)}>
-                  {showPassword ? (
-                    <IOIcon name="ios-eye" size={24} color={colors.white} />
-                  ) : (
-                    <IOIcon name="ios-eye-off" size={24} color={colors.white} />
-                  )}
-                </Pressable>
-              </Box>
-            }
-          />
-          <Text style={styles.link} onPress={goToForgotPassword}>
-            Forgot Password
-          </Text>
-          <CustomButton onPress={onLogin} styleContainer={styles.button}>
-            Login
-          </CustomButton>
-          <Text style={styles.text}>
-            Don’t have account?{' '}
-            <Text onPress={goToRegister} style={styles.register}>
-              Sign up now
+    <>
+      {authReducer.isLoading && <LoadingScreen title="Logging in..." />}
+      <ImageBackground
+        source={LOGIN_BG}
+        resizeMode={'cover'}
+        style={styles.image}>
+        <SafeAreaView style={styles.container}>
+          <Text style={styles.heading}>LET’S EXPLORE THE WORLD</Text>
+          <View>
+            {/* {/* <CustomTextInput placeholder="Username" /> */}
+            {/* <CustomTextInput style={styles.input} placeholder="Password" /> */}
+            <Input
+              onChangeText={text => setEmail(text)}
+              placeholder="Username"
+              bgColor="rgba(223, 222, 222, 0.3)"
+              fontFamily={fontStyle(fontFamily.primary, 'bold')}
+              placeholderTextColor={colors.white}
+              borderWidth={0}
+              color={colors.white}
+              mb="5"
+            />
+            <Input
+              onChangeText={text => setPassword(text)}
+              placeholder="Password"
+              bgColor="rgba(223, 222, 222, 0.3)"
+              fontFamily={fontStyle(fontFamily.primary, 'bold')}
+              placeholderTextColor={colors.white}
+              borderWidth={0}
+              color={colors.white}
+              secureTextEntry={showPassword}
+              InputRightElement={
+                <Box mr="4">
+                  <Pressable onPress={() => setShowPassword(!showPassword)}>
+                    {showPassword ? (
+                      <IOIcon name="ios-eye" size={24} color={colors.white} />
+                    ) : (
+                      <IOIcon
+                        name="ios-eye-off"
+                        size={24}
+                        color={colors.white}
+                      />
+                    )}
+                  </Pressable>
+                </Box>
+              }
+            />
+            <Text style={styles.link} onPress={goToForgotPassword}>
+              Forgot Password
             </Text>
-          </Text>
-        </View>
-      </SafeAreaView>
-    </ImageBackground>
+            <CustomButton onPress={onLogin} styleContainer={styles.button}>
+              Login
+            </CustomButton>
+            <Text style={styles.text}>
+              Don’t have account?{' '}
+              <Text onPress={goToRegister} style={styles.register}>
+                Sign up now
+              </Text>
+            </Text>
+          </View>
+        </SafeAreaView>
+      </ImageBackground>
+    </>
   );
 }
 
