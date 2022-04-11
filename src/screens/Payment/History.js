@@ -1,20 +1,14 @@
-import {VirtualizedList} from 'react-native';
+import {} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {
-  Box,
-  FlatList,
-  Heading,
-  Pressable,
-  ScrollView,
-  Spinner,
-  Text,
-  useToast,
-} from 'native-base';
+import {Box, FlatList, Pressable, Text, useToast, Button} from 'native-base';
 import {fontFamily, fontStyle} from '../../helpers/styleConstants';
 import {axiosInstance} from '../../helpers/http';
 import {useDispatch, useSelector} from 'react-redux';
 import HistoryItem from '../../components/HistoryItem';
-import {getTransactionDetail} from '../../redux/actions/transactionActions';
+import {
+  clearTransactionError,
+  getTransactionDetail,
+} from '../../redux/actions/transactionActions';
 import LoadingScreen from '../../components/LoadingScreen';
 import {
   FINISH_PAYMENT,
@@ -38,11 +32,25 @@ export default function History({navigation}) {
   const [histories, setHistories] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
 
+  const [doRefresh, setDoRefresh] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
-    if (authReducer.user) {
+    if (trxError) {
+      dispatch(clearTransactionError());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (authReducer.user && doRefresh) {
       getHistories();
     }
-  }, [authReducer]);
+
+    if (doRefresh) {
+      // getHistories();
+      setDoRefresh(false);
+    }
+  }, [authReducer, doRefresh]);
 
   useEffect(() => {
     if (trxError) {
@@ -64,7 +72,11 @@ export default function History({navigation}) {
 
   const getHistories = async () => {
     try {
-      const {data} = await axiosInstance(token).get('/histories?limit=10');
+      setIsLoading(true);
+
+      const {data} = await axiosInstance(token).get(
+        '/histories?limit=10&created=desc',
+      );
 
       if (!data.success) {
         toast.show({
@@ -73,12 +85,16 @@ export default function History({navigation}) {
           position: 'top',
           status: 'error',
         });
+        setIsLoading(false);
         return;
       }
 
       console.log(data);
 
       setHistories(data.results);
+      setPageInfo(data.pageInfo);
+
+      setIsLoading(false);
     } catch (err) {
       if (err.response) {
         toast.show({
@@ -95,6 +111,8 @@ export default function History({navigation}) {
           duration: 3000,
         });
       }
+
+      setIsLoading(false);
     }
   };
 
@@ -122,9 +140,65 @@ export default function History({navigation}) {
     // });
   };
 
+  const loadMore = async () => {
+    try {
+      setIsLoading(true);
+
+      const endpoint = pageInfo?.nextPage.split('?')[1];
+
+      console.log(endpoint);
+
+      const {data} = await axiosInstance(token).get(`/histories?${endpoint}`);
+
+      if (!data.success) {
+        toast.show({
+          render: () => (
+            <Box bg="error.500" px="2" py="1" rounded="sm" mb={5}>
+              {data.message}
+            </Box>
+          ),
+        });
+
+        setIsLoading(false);
+        return;
+      }
+
+      setHistories([...histories, ...data.results]);
+
+      setIsLoading(false);
+    } catch (err) {
+      if (err.response) {
+        console.error(err.response);
+        const id = err.response.data.message;
+        if (!toast.isActive(id)) {
+          toast.show({
+            render: () => (
+              <Box bg="error.500" px="2" py="1" rounded="sm" mb={5}>
+                {err.response.data.message}
+              </Box>
+            ),
+          });
+        }
+      } else {
+        console.error(err);
+        const id = err.message;
+        if (!toast.isActive(id)) {
+          toast.show({
+            render: () => (
+              <Box bg="error.500" px="2" py="1" rounded="sm" mb={5}>
+                {err.response.data.message}
+              </Box>
+            ),
+          });
+        }
+      }
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
-      {trxLoading && <LoadingScreen />}
+      {(trxLoading || isLoading) && <LoadingScreen />}
       <Box w="full" px="5" pt="5" pb="12" flex={1}>
         <Box>
           <Text
@@ -144,29 +218,46 @@ export default function History({navigation}) {
               No history order
             </Text>
           )}
-          {histories.length && (
-            <FlatList
-              data={histories}
-              showsVerticalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item}) => (
-                <Pressable onPress={() => seeDetails(item.id)}>
-                  <Box mb="3" py="3" rounded="2xl">
-                    <HistoryItem
-                      type={item.type}
-                      name={item.name}
-                      image={item.image}
-                      startRent={item.start_rent}
-                      endRent={item.end_rent}
-                      prepayment={item.prepayment}
-                      paymentStatus={item.payment}
-                      returnStatus={item.returned}
-                    />
+          {/* {histories.length && ( */}
+          <FlatList
+            data={histories}
+            onRefresh={() => setDoRefresh(true)}
+            refreshing={doRefresh}
+            ListFooterComponent={() => (
+              <>
+                {pageInfo.nextPage && (
+                  <Box px="5" mb="5">
+                    <Button bgColor="warning.500" onPress={loadMore}>
+                      <Text
+                        fontFamily={fontStyle(fontFamily.primary, 'bold')}
+                        color="white">
+                        Load More
+                      </Text>
+                    </Button>
                   </Box>
-                </Pressable>
-              )}
-            />
-          )}
+                )}
+              </>
+            )}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) => (
+              <Pressable onPress={() => seeDetails(item.id)}>
+                <Box mb="3" py="3" rounded="2xl">
+                  <HistoryItem
+                    type={item.type}
+                    name={item.name}
+                    image={item.image}
+                    startRent={item.start_rent}
+                    endRent={item.end_rent}
+                    prepayment={item.prepayment}
+                    paymentStatus={item.payment}
+                    returnStatus={item.returned}
+                  />
+                </Box>
+              </Pressable>
+            )}
+          />
+          {/* )} */}
         </Box>
       </Box>
     </>

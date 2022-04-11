@@ -107,6 +107,49 @@ export const payTransaction = (transactionId, token) => {
     }
   };
 };
+export const vehicleIsReturned = (transactionId, token) => {
+  return async dispatch => {
+    try {
+      dispatch({
+        type: SET_TRANSACTION_LOADING,
+        payload: true,
+      });
+
+      const params = qs.stringify({
+        returned: true,
+      });
+
+      const {data} = await axiosInstance(token).patch(
+        `/histories/${transactionId}`,
+        params,
+      );
+
+      dispatch({
+        type: SET_TRANSACTION_DETAIL,
+        payload: data.results,
+      });
+
+      dispatch({
+        type: SET_TRANSACTION_LOADING,
+        payload: false,
+      });
+    } catch (err) {
+      if (err.response) {
+        console.error(err.response);
+        dispatch({
+          type: SET_TRANSACTION_ERROR,
+          payload: err.response.data.error,
+        });
+      } else {
+        console.error(err);
+        dispatch({
+          type: SET_TRANSACTION_ERROR,
+          payload: err.message,
+        });
+      }
+    }
+  };
+};
 export const getTransactionDetail = (transactionId, token) => {
   return async dispatch => {
     try {
@@ -162,6 +205,15 @@ export const clearTransactionDetail = () => {
     dispatch({
       type: SET_TRANSACTION_DETAIL,
       payload: null,
+    });
+  };
+};
+
+export const clearTransactionError = () => {
+  return dispatch => {
+    dispatch({
+      type: SET_TRANSACTION_ERROR,
+      payload: '',
     });
   };
 };
