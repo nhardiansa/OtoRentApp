@@ -8,6 +8,7 @@ import Favorites from '../screens/Favorites';
 import BottomTab from './BottomTab';
 import VehicleDetail from '../screens/VehicleDetail';
 import {
+  ADMIN_STACK,
   BOTTOM_TAB,
   PAYMENT_STACK,
   VEHICLE_DETAIL,
@@ -18,6 +19,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {setUserProfile} from '../redux/actions/userActions';
 import {setDataForSearch} from '../redux/actions/vehicleActions';
+import AdminStack from './AdminStack';
 // import reduxStore from '../redux/store';
 
 const MainStack = createNativeStackNavigator();
@@ -78,6 +80,9 @@ export default function Routes() {
             <MainStack.Screen name="Favorites" component={Favorites} />
             <MainStack.Screen name={VEHICLE_DETAIL} component={VehicleDetail} />
             <MainStack.Screen name={PAYMENT_STACK} component={PaymentStack} />
+            {userReducer.profile?.role === 'administrator' && (
+              <MainStack.Screen name={ADMIN_STACK} component={AdminStack} />
+            )}
           </>
         )}
       </MainStack.Navigator>

@@ -25,3 +25,6 @@ export const BOTTOM_TAB = 'BottomTab';
 export const PROFILE_STACK = 'ProfileStack';
 export const PROFILE_SCREEN = 'ProfileScreen';
 export const UPDATE_PROFILE = 'UpdateProfile';
+
+export const ADMIN_STACK = 'AdminStack';
+export const ADD_ITEM_SCREEN = 'AddItemScreen';
