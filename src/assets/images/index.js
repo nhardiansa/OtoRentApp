@@ -9,3 +9,5 @@ export const BIKE_PLACEHOLDER = require('./bike-placeholder.png');
 export const CAR_PLACEHOLDER = require('./car-placeholder.png');
 
 export const PROFILE_PLACEHOLDER = require('./profile-placeholder.png');
+
+export const BLANK_PLACEHOLDER = require('./blank-placeholder.jpg');

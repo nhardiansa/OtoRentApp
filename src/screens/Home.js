@@ -12,7 +12,15 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector, useDispatch} from 'react-redux';
-import {Box, Image as NBImage, Input, Skeleton, useToast} from 'native-base';
+import {
+  Box,
+  Button,
+  Image as NBImage,
+  Input,
+  Skeleton,
+  useToast,
+  Text as NBText,
+} from 'native-base';
 
 import {
   HOME_BANNER,
@@ -22,6 +30,8 @@ import {
 } from '../assets/images';
 import {fontFamily, fontSize, fontStyle} from '../helpers/styleConstants';
 import {
+  ADD_ITEM_SCREEN,
+  ADMIN_STACK,
   VEHICLE_DETAIL,
   VIEW_MORE_SCREEN,
 } from '../helpers/destinationConstants';
@@ -34,7 +44,7 @@ import {
 } from '../redux/actions/vehicleActions';
 
 export default function Home({navigation}) {
-  const {vehiclesReducer} = useSelector(state => state);
+  const {vehiclesReducer, userReducer} = useSelector(state => state);
   const dispatch = useDispatch();
 
   const toast = useToast();
@@ -169,6 +179,24 @@ export default function Home({navigation}) {
                     </Box>
                   }
                 />
+                {userReducer.profile?.role === 'administrator' && (
+                  <Button
+                    onPress={() => {
+                      navigation.navigate(ADMIN_STACK, {
+                        screen: ADD_ITEM_SCREEN,
+                      });
+                    }}
+                    rounded="lg"
+                    mt="3"
+                    bgColor="warning.500">
+                    <NBText
+                      fontFamily={fontStyle(fontFamily.primary, 'bold')}
+                      color="white"
+                      fontSize="lg">
+                      Add item
+                    </NBText>
+                  </Button>
+                )}
               </Box>
             </Box>
 
