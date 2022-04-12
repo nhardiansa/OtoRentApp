@@ -8,6 +8,7 @@ import {
   PAYMENT_DETAIL,
   VEHICLE_DETAIL,
   HOME_SCREEN,
+  HISTORY_FILTER,
 } from '../helpers/destinationConstants';
 
 import PaymentForm from '../screens/Payment/PaymentForm';
@@ -22,6 +23,7 @@ import {
 } from '../redux/actions/transactionActions';
 import DetailTransaction from '../screens/Payment/DetailTransaction';
 import {SET_VEHICLE} from '../redux/types/vehicles';
+import HistoryFilter from '../screens/Payment/HistoryFilter';
 
 const Payment = createNativeStackNavigator();
 
@@ -82,6 +84,7 @@ export default function PaymentStack({navigation}) {
 
       <Payment.Screen name={FINISH_PAYMENT} component={FinishPayment} />
       <Payment.Screen name={PAYMENT_DETAIL} component={DetailTransaction} />
+      <Payment.Screen name={HISTORY_FILTER} component={HistoryFilter} />
     </Payment.Navigator>
   );
 }
