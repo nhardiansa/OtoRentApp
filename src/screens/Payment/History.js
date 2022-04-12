@@ -1,7 +1,7 @@
 import {} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Box, FlatList, Pressable, Text, useToast, Button} from 'native-base';
-import {fontFamily, fontStyle} from '../../helpers/styleConstants';
+import {colors, fontFamily, fontStyle} from '../../helpers/styleConstants';
 import {axiosInstance} from '../../helpers/http';
 import {useDispatch, useSelector} from 'react-redux';
 import HistoryItem from '../../components/HistoryItem';
@@ -12,15 +12,23 @@ import {
 import LoadingScreen from '../../components/LoadingScreen';
 import {
   FINISH_PAYMENT,
+  HISTORY_FILTER,
   PAYMENT_DETAIL,
   PAYMENT_STACK,
 } from '../../helpers/destinationConstants';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
+
+import qs from 'query-string';
 
 export default function History({navigation}) {
   const dispatch = useDispatch();
   const {authReducer, transactionReducer} = useSelector(state => state);
   const {token} = authReducer.user;
-  const {loading: trxLoading, error: trxError} = transactionReducer;
+  const {
+    loading: trxLoading,
+    error: trxError,
+    queryParams,
+  } = transactionReducer;
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -54,28 +62,40 @@ export default function History({navigation}) {
 
   useEffect(() => {
     if (trxError) {
+      console.log('trxError', trxError);
       const id = trxError;
       if (!toast.isActive(id)) {
         toast.show({
           id,
-          title: 'Error',
-          description: trxError,
-          status: 'error',
           duration: 3000,
-          placement: 'top',
+          render: () => (
+            <Box bg="error.500" px="2" py="1" rounded="sm" mb={5}>
+              {trxError}
+            </Box>
+          ),
+          placement: 'bottom',
         });
       }
     }
 
     console.log('error section');
-  }, [trxLoading, trxError, toast]);
+  }, [trxLoading, trxError]);
 
   const getHistories = async () => {
     try {
       setIsLoading(true);
 
+      const params = {
+        ...queryParams,
+        limit: 10,
+      };
+
+      if (!params.created) {
+        params.created = 'desc';
+      }
+
       const {data} = await axiosInstance(token).get(
-        '/histories?limit=10&created=desc',
+        `/histories?${qs.stringify(params)}`,
       );
 
       if (!data.success) {
@@ -196,10 +216,16 @@ export default function History({navigation}) {
     }
   };
 
+  const goToFilter = () => {
+    navigation.navigate(PAYMENT_STACK, {
+      screen: HISTORY_FILTER,
+    });
+  };
+
   return (
     <>
       {(trxLoading || isLoading) && <LoadingScreen />}
-      <Box w="full" px="5" pt="5" pb="12" flex={1}>
+      <Box w="full" px="5" pt="5" pb="1/5" flex={1}>
         <Box>
           <Text
             fontFamily={fontStyle(fontFamily.primary, 'bold')}
@@ -207,8 +233,22 @@ export default function History({navigation}) {
             fontSize="3xl">
             History Order
           </Text>
+          <Box
+            mt="5"
+            alignSelf="flex-end"
+            borderBottomColor="#F5F5F5"
+            borderBottomWidth={1}>
+            <Pressable onPress={goToFilter}>
+              <Box flexDir="row" alignItems="center">
+                <FAIcon name="filter" size={20} />
+                <Text color={colors.grayDark} fontSize="md" ml="1.5">
+                  Sort & Filter
+                </Text>
+              </Box>
+            </Pressable>
+          </Box>
         </Box>
-        <Box justifyContent="center" minHeight="3/5" mt="12">
+        <Box justifyContent="center" minHeight="3/5" mt="5">
           {!histories.length && (
             <Text
               textAlign="center"

@@ -5,6 +5,7 @@ import {
   Button,
   Divider,
   Image,
+  Modal,
   ScrollView,
   Text,
   useToast,
@@ -70,6 +71,7 @@ export default function DetailTransaction({navigation}) {
   const [placeHolder, setPlaceHolder] = useState(CAR_PLACEHOLDER);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (trxError) {
@@ -102,123 +104,216 @@ export default function DetailTransaction({navigation}) {
     dispatch(vehicleIsReturned(transactionId, token));
   };
 
+  const deleteHistory = async id => {
+    try {
+      setIsLoading(true);
+
+      const {data} = await axiosInstance(token).delete(
+        `/histories/${id}${role.includes('admin') ? '/admin' : ''}`,
+      );
+
+      if (data.success) {
+        toast.show({
+          render: () => (
+            <Box bg="success.500" px="2" py="1" rounded="sm" mb={5}>
+              {data.message}
+            </Box>
+          ),
+        });
+        navigation.navigate(BOTTOM_TAB, {
+          screen: HISTORY_SCREEN,
+        });
+        setIsLoading(false);
+      }
+
+      setIsLoading(false);
+    } catch (err) {
+      console.error(err.response ? err.response : err.message);
+      const id = err.response ? err.response.data.message : err.message;
+      if (!toast.isActive(id)) {
+        toast.show({
+          render: () => (
+            <Box bg="error.500" px="2" py="1" rounded="sm" mb={5}>
+              {err.response ? err.response.data.message : err.message}
+            </Box>
+          ),
+        });
+      }
+    }
+  };
+
   return (
     <>
       {trxLoading || isLoading ? (
         <LoadingScreen />
       ) : (
-        <ScrollView>
-          <Box px="5" flex={1} bgColor="white" pt="5">
-            <Box>
-              <Text
-                fontSize="3xl"
-                textAlign="center"
-                color={colors.green}
-                fontFamily={fontStyle(fontFamily.primary, 'bold')}>
-                {Number(isReturned) ? 'Has been returned' : 'Payment success'}
-              </Text>
+        <>
+          <ScrollView>
+            <Box px="5" flex={1} bgColor="white" pt="5">
+              <Box>
+                <Text
+                  fontSize="3xl"
+                  textAlign="center"
+                  color={colors.green}
+                  fontFamily={fontStyle(fontFamily.primary, 'bold')}>
+                  {Number(isReturned) ? 'Has been returned' : 'Payment success'}
+                </Text>
 
-              <Image
-                mt="9"
-                source={vehicleImage ? normalizeUrl(vehicleImage) : placeHolder}
-                alt={vehicleName}
-                w="full"
-                h={56}
-                rounded="xl"
-              />
-            </Box>
-            <Box mt="7">
-              <Text
-                fontSize="xl"
-                fontFamily={fontStyle(fontFamily.primary, 'bold')}
-                textAlign="center">
-                Booking Code: {'\n'}
-                <Text color={colors.green}>{payment_code}</Text>
-              </Text>
-            </Box>
-            <Box mt="9">
-              <Text
-                color="gray.500"
-                fontSize="lg"
-                fontFamily={fontStyle(fontFamily.primary)}>
-                {qty + ' ' + capitalize(vehicleName)}
-              </Text>
-              <Text
-                mt="3"
-                color="gray.500"
-                fontSize="lg"
-                fontFamily={fontStyle(fontFamily.primary)}>
-                {prepayment ? priceFormat(prepayment) : 'No Prepayment'}
-              </Text>
-              <Text
-                mt="3"
-                color="gray.500"
-                fontSize="lg"
-                fontFamily={fontStyle(fontFamily.primary)}>
-                {(Date.parse(end_rent) - Date.parse(start_rent)) /
-                  (1000 * 60 * 60 * 24)}
-                {(Date.parse(end_rent) - Date.parse(start_rent)) /
-                  (1000 * 60 * 60 * 24) >
-                1
-                  ? ' Days'
-                  : ' Day'}
-              </Text>
-              <Text
-                mt="3"
-                color="gray.500"
-                fontSize="lg"
-                fontFamily={fontStyle(fontFamily.primary)}>
-                {moment(start_rent).format('MMM D') +
-                  ' to ' +
-                  moment(end_rent).format('MMM D YYYY')}
-              </Text>
-            </Box>
-            <Divider my="5" />
-            <Box>
-              <Text
-                mt="3"
-                color="gray.500"
-                fontSize="lg"
-                fontFamily={fontStyle(fontFamily.primary)}>
-                {userName} ({email})
-              </Text>
-              <Text
-                mt="3"
-                color="gray.500"
-                fontSize="lg"
-                fontFamily={fontStyle(fontFamily.primary)}>
-                {phone}
-              </Text>
-            </Box>
-            <Box mt="12" mb="5" bgColor={colors.primary} rounded="2xl" py="4">
-              <Text
-                fontFamily={fontStyle(fontFamily.primary, 'bold')}
-                textAlign="center"
-                color="white"
-                fontSize="2xl">
-                Total Rp {priceFormat(totalPaid)}
-              </Text>
-            </Box>
-            {role.includes('admin') && !Number(isReturned) ? (
-              <Box mb="7">
-                <Button
-                  onPress={setIsReturned}
-                  bgColor={colors.secondary}
-                  rounded="2xl">
-                  <Text
-                    fontFamily={fontStyle(fontFamily.primary, 'bold')}
-                    textAlign="center"
-                    color={colors.primary}
-                    fontSize="2xl">
-                    Has returned
-                  </Text>
-                </Button>
+                <Image
+                  mt="9"
+                  source={
+                    vehicleImage ? normalizeUrl(vehicleImage) : placeHolder
+                  }
+                  alt={vehicleName}
+                  w="full"
+                  h={56}
+                  rounded="xl"
+                />
               </Box>
-            ) : (
-              <></>
-            )}
-          </Box>
-        </ScrollView>
+              <Box mt="7">
+                <Text
+                  fontSize="xl"
+                  fontFamily={fontStyle(fontFamily.primary, 'bold')}
+                  textAlign="center">
+                  Booking Code: {'\n'}
+                  <Text color={colors.green}>{payment_code}</Text>
+                </Text>
+              </Box>
+              <Box mt="9">
+                <Text
+                  color="gray.500"
+                  fontSize="lg"
+                  fontFamily={fontStyle(fontFamily.primary)}>
+                  {qty + ' ' + capitalize(vehicleName)}
+                </Text>
+                <Text
+                  mt="3"
+                  color="gray.500"
+                  fontSize="lg"
+                  fontFamily={fontStyle(fontFamily.primary)}>
+                  {prepayment ? priceFormat(prepayment) : 'No Prepayment'}
+                </Text>
+                <Text
+                  mt="3"
+                  color="gray.500"
+                  fontSize="lg"
+                  fontFamily={fontStyle(fontFamily.primary)}>
+                  {(Date.parse(end_rent) - Date.parse(start_rent)) /
+                    (1000 * 60 * 60 * 24)}
+                  {(Date.parse(end_rent) - Date.parse(start_rent)) /
+                    (1000 * 60 * 60 * 24) >
+                  1
+                    ? ' Days'
+                    : ' Day'}
+                </Text>
+                <Text
+                  mt="3"
+                  color="gray.500"
+                  fontSize="lg"
+                  fontFamily={fontStyle(fontFamily.primary)}>
+                  {moment(start_rent).format('MMM D') +
+                    ' to ' +
+                    moment(end_rent).format('MMM D YYYY')}
+                </Text>
+              </Box>
+              <Divider my="5" />
+              <Box>
+                <Text
+                  mt="3"
+                  color="gray.500"
+                  fontSize="lg"
+                  fontFamily={fontStyle(fontFamily.primary)}>
+                  {userName} ({email})
+                </Text>
+                <Text
+                  mt="3"
+                  color="gray.500"
+                  fontSize="lg"
+                  fontFamily={fontStyle(fontFamily.primary)}>
+                  {phone}
+                </Text>
+              </Box>
+              <Box mt="12" mb="5" bgColor={colors.primary} rounded="2xl" py="4">
+                <Text
+                  fontFamily={fontStyle(fontFamily.primary, 'bold')}
+                  textAlign="center"
+                  color="white"
+                  fontSize="2xl">
+                  Total Rp {priceFormat(totalPaid)}
+                </Text>
+              </Box>
+              {role.includes('admin') && !Number(isReturned) ? (
+                <Box mb="7">
+                  <Button
+                    onPress={setIsReturned}
+                    bgColor={colors.secondary}
+                    rounded="2xl">
+                    <Text
+                      fontFamily={fontStyle(fontFamily.primary, 'bold')}
+                      textAlign="center"
+                      color={colors.primary}
+                      fontSize="2xl">
+                      Has returned
+                    </Text>
+                  </Button>
+                </Box>
+              ) : (
+                <></>
+              )}
+              {Number(isReturned) ? (
+                <Box mb="7">
+                  <Button
+                    onPress={() => setShowModal(true)}
+                    bgColor={colors.red}
+                    rounded="2xl">
+                    <Text
+                      fontFamily={fontStyle(fontFamily.primary, 'bold')}
+                      textAlign="center"
+                      color={colors.white}
+                      fontSize="2xl">
+                      Delete History
+                    </Text>
+                  </Button>
+                </Box>
+              ) : (
+                <></>
+              )}
+            </Box>
+          </ScrollView>
+          <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+            <Modal.Content maxWidth="400px">
+              <Modal.CloseButton />
+              <Modal.Header>Are you sure?</Modal.Header>
+              <Modal.Body>
+                <Text>
+                  Are you sure you want to{' '}
+                  {role.includes('admin') ? 'permanent ' : ''}delete this
+                  transaction?
+                </Text>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button.Group space={2}>
+                  <Button
+                    variant="ghost"
+                    colorScheme="blueGray"
+                    onPress={() => {
+                      setShowModal(false);
+                    }}>
+                    Cancel
+                  </Button>
+                  <Button
+                    bgColor={colors.red}
+                    onPress={() => {
+                      setShowModal(false);
+                      deleteHistory(transactionId);
+                    }}>
+                    Delete
+                  </Button>
+                </Button.Group>
+              </Modal.Footer>
+            </Modal.Content>
+          </Modal>
+        </>
       )}
     </>
   );

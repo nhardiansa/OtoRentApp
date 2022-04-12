@@ -6,6 +6,7 @@ import {
   SET_TRANSACTION_DETAIL,
   SET_TRANSACTION_ERROR,
   SET_TRANSACTION_LOADING,
+  SET_TRANSACTION_QUERY_PARAMS,
 } from '../types/transaction';
 import {SET_VEHICLE} from '../types/vehicles';
 
@@ -51,7 +52,7 @@ export const createTransaction = (transactionData, token) => {
         console.error(err.response);
         dispatch({
           type: SET_TRANSACTION_ERROR,
-          payload: err.response.data.error,
+          payload: err.response.data.message,
         });
       } else {
         console.error(err);
@@ -95,7 +96,7 @@ export const payTransaction = (transactionId, token) => {
         console.error(err.response);
         dispatch({
           type: SET_TRANSACTION_ERROR,
-          payload: err.response.data.error,
+          payload: err.response.data.message,
         });
       } else {
         console.error(err);
@@ -138,7 +139,7 @@ export const vehicleIsReturned = (transactionId, token) => {
         console.error(err.response);
         dispatch({
           type: SET_TRANSACTION_ERROR,
-          payload: err.response.data.error,
+          payload: err.response.data.message,
         });
       } else {
         console.error(err);
@@ -187,7 +188,7 @@ export const getTransactionDetail = (transactionId, token) => {
         console.error(err.response);
         dispatch({
           type: SET_TRANSACTION_ERROR,
-          payload: err.response.data.error,
+          payload: err.response.data.message,
         });
       } else {
         console.error(err);
@@ -214,6 +215,15 @@ export const clearTransactionError = () => {
     dispatch({
       type: SET_TRANSACTION_ERROR,
       payload: '',
+    });
+  };
+};
+
+export const setHistoryQuery = query => {
+  return dispatch => {
+    dispatch({
+      type: SET_TRANSACTION_QUERY_PARAMS,
+      payload: query,
     });
   };
 };
