@@ -22,7 +22,11 @@ import {colors, fontFamily, fontStyle} from '../../helpers/styleConstants';
 import {useDispatch, useSelector} from 'react-redux';
 import {setQuery} from '../../redux/actions/vehicleActions';
 import {capitalize} from '../../helpers/formatter';
-import {SEARCH_SCREEN} from '../../helpers/destinationConstants';
+import {
+  BOTTOM_TAB,
+  HISTORY_SCREEN,
+  SEARCH_SCREEN,
+} from '../../helpers/destinationConstants';
 
 export default function HistoryFilter({navigation}) {
   const dispatch = useDispatch();
@@ -45,7 +49,9 @@ export default function HistoryFilter({navigation}) {
       headerLeft: () => (
         <BackSection
           onPress={() => {
-            navigation.replace(SEARCH_SCREEN);
+            navigation.replace(BOTTOM_TAB, {
+              screen: HISTORY_SCREEN,
+            });
           }}
         />
       ),
