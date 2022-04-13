@@ -29,6 +29,7 @@ import {updateUserProfile} from '../../redux/actions/userActions';
 
 import LoadingScreen from '../../components/LoadingScreen';
 import {clearProcessError} from '../../redux/actions/processActions';
+import {PROFILE_SCREEN} from '../../helpers/destinationConstants';
 
 export default function UpdateProfile({navigation}) {
   useLayoutEffect(() => {
@@ -61,6 +62,8 @@ export default function UpdateProfile({navigation}) {
   const [errorModal, setErrorModal] = useState(false);
   const [imageProfile, setImageProfile] = useState(PROFILE_PLACEHOLDER);
 
+  const [errorLoadImage, setErrorLoadImage] = useState(false);
+
   const showDateTimePicker = async () => {
     DateTimePickerAndroid.open({
       value: birthDate ? new Date(birthDate) : new Date(),
@@ -85,7 +88,18 @@ export default function UpdateProfile({navigation}) {
         });
       }
     }
-  }, [processError, processLoading]);
+
+    if (!user) {
+      navigation.replace(PROFILE_SCREEN);
+    }
+  }, [processError, processLoading, user]);
+
+  useEffect(() => {
+    if (errorLoadImage) {
+      setImageProfile(PROFILE_PLACEHOLDER);
+      setErrorLoadImage(false);
+    }
+  }, [errorLoadImage]);
 
   useEffect(() => {
     if (changesData.image) {
@@ -267,6 +281,16 @@ export default function UpdateProfile({navigation}) {
     dispatch(updateUserProfile(dataCollection, auth.token));
   };
 
+  const errorLoadingImage = ({nativeEvent, target}) => {
+    const {error} = nativeEvent;
+
+    console.log(target);
+
+    if (error) {
+      setErrorLoadImage(true);
+    }
+  };
+
   return (
     <>
       {processLoading || processError ? (
@@ -278,6 +302,7 @@ export default function UpdateProfile({navigation}) {
               <Box position="relative" p="2">
                 <Image
                   source={imageProfile}
+                  onError={errorLoadingImage}
                   h="24"
                   w="24"
                   rounded="full"

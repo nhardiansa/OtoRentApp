@@ -46,11 +46,15 @@ export default function Routes() {
       console.log('categories', categories);
       console.log('locations', locations);
 
-      if (categories.length === 0 && locations.length === 0) {
-        dispatch(setDataForSearch());
-      }
+      // if (categories.length === 0 && locations.length === 0) {
+      //   dispatch(setDataForSearch());
+      // }
     }
   }, [authReducer]);
+
+  useEffect(() => {
+    dispatch(setDataForSearch());
+  }, []);
 
   const setTokenToStorage = async token => {
     const savedToken = await AsyncStorage.getItem('token');
