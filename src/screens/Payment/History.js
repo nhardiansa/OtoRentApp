@@ -90,8 +90,25 @@ export default function History({navigation}) {
         limit: 10,
       };
 
-      if (!params.created) {
+      console.log('params', params);
+
+      if (params.sort && Object.keys(params.sort).length > 0) {
+        for (const key in params.sort) {
+          params[key] = params.sort[key];
+        }
+        delete params.sort;
+      } else {
         params.created = 'desc';
+      }
+
+      console.log('params', params, queryParams);
+      // if (!params.created) {
+      // }
+
+      for (const key in params) {
+        if (!params[key]) {
+          delete params[key];
+        }
       }
 
       const {data} = await axiosInstance(token).get(

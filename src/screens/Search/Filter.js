@@ -336,6 +336,22 @@ export default function Filter({navigation}) {
               onValueChange={v => onSorterChange(v, 'created', 'desc')}
             />
           </Box>
+          <Box justifySelf="flex-end" mt="6">
+            <Button
+              bgColor="warning.500"
+              rounded="xl"
+              p="3"
+              onPress={() => {
+                navigation.replace(SEARCH_SCREEN);
+              }}>
+              <Text
+                fontFamily={fontStyle(fontFamily.primary, 'bold')}
+                fontSize="lg"
+                color="white">
+                Apply
+              </Text>
+            </Button>
+          </Box>
         </ScrollView>
       </Box>
       <Actionsheet
