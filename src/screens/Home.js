@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useSelector, useDispatch} from 'react-redux';
@@ -48,6 +49,7 @@ export default function Home({navigation}) {
   const dispatch = useDispatch();
 
   const toast = useToast();
+  const [isRefresh, setIsRefresh] = useState(false);
 
   useEffect(() => {
     getVehicles();
@@ -59,37 +61,27 @@ export default function Home({navigation}) {
         description: vehiclesReducer.error,
       });
     }
+  }, [vehiclesReducer]);
 
+  useEffect(() => {
     if (vehiclesReducer.vehicle.id) {
       navigation.navigate(VEHICLE_DETAIL);
     }
-  }, [vehiclesReducer]);
+  }, [vehiclesReducer.vehicle]);
 
-  const getVehicles = async () => {
+  useEffect(() => {
+    const loading = vehiclesReducer.loading;
+
+    if (loading) {
+      setIsRefresh(true);
+    } else {
+      setIsRefresh(false);
+    }
+  }, [vehiclesReducer.loading]);
+
+  const getVehicles = () => {
     dispatch(getVehiclesHome());
   };
-
-  // const vehicles = [
-  //   {
-  //     id: 1,
-  //     src: CAR_PLACEHOLDER,
-  //   },
-  //   {
-  //     id: 2,
-  //     src: CAR_PLACEHOLDER,
-  //   },
-  // ];
-
-  // const bikes = [
-  //   {
-  //     id: 1,
-  //     src: BIKE_PLACEHOLDER,
-  //   },
-  //   {
-  //     id: 2,
-  //     src: BIKE_PLACEHOLDER,
-  //   },
-  // ];
 
   const goToViewMore = () => {
     console.log('Go to View More');
@@ -161,7 +153,14 @@ export default function Home({navigation}) {
         <LoadingScreen />
       ) : (
         <SafeAreaView>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefresh}
+                onRefresh={() => getVehicles()}
+              />
+            }>
             <Box w="full" position="relative" mb="5">
               <NBImage w="full" source={HOME_BANNER} alt="banner" />
               <Box px="5" mt="6" position="absolute" w="full">
