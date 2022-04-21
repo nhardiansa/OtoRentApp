@@ -9,9 +9,12 @@ export const priceFormat = price => {
   return res.reverse().join('');
 };
 
-export const normalizeUrl = url => {
-  const srcImg = url.replace('http://localhost:5000', baseURL);
-  return {uri: srcImg};
+export const normalizeUrl = (url, placeholder = null) => {
+  if (url) {
+    const srcImg = url.replace('http://localhost:5000', baseURL);
+    return {uri: srcImg};
+  }
+  return placeholder;
 };
 
 export const capitalize = str => {

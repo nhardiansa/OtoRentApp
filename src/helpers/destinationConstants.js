@@ -29,3 +29,4 @@ export const UPDATE_PROFILE = 'UpdateProfile';
 
 export const ADMIN_STACK = 'AdminStack';
 export const ADD_ITEM_SCREEN = 'AddItemScreen';
+export const EDIT_ITEM_SCREEN = 'EditItemScreen';
