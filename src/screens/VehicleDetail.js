@@ -26,7 +26,10 @@ import {Box, ScrollView, Stack, useToast, Text as NVText} from 'native-base';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 import {
   ADMIN_STACK,
+  BOTTOM_TAB,
   EDIT_ITEM_SCREEN,
+  HOME_SCREEN,
+  HOME_TAB,
   PAYMENT_STACK,
   SEARCH_SCREEN,
 } from '../helpers/destinationConstants';
@@ -66,14 +69,19 @@ export default function VehicleDetail({route, navigation}) {
   const [countRent, setCountRent] = useState(0);
 
   useEffect(() => {
-    if (!vehicle.id) {
-      navigation.goBack();
-      return;
-    }
+    // if (!vehicle.id) {
+    //   navigation.goBack();
+    //   return;
+    // }
 
     // dispatch(getVehicleDetail());
     if (Object.keys(vehicle).length < 1) {
-      navigation.goBack();
+      navigation.replace(BOTTOM_TAB, {
+        screen: HOME_TAB,
+        params: {
+          screen: HOME_SCREEN,
+        },
+      });
       return;
     }
 
@@ -84,6 +92,17 @@ export default function VehicleDetail({route, navigation}) {
       dispatch(setVehicleList(query));
     };
   }, []);
+
+  useEffect(() => {
+    if (Object.keys(vehicle).length < 1) {
+      navigation.replace(BOTTOM_TAB, {
+        screen: HOME_TAB,
+        params: {
+          screen: HOME_SCREEN,
+        },
+      });
+    }
+  }, [vehicle]);
 
   const increaseItem = () => {
     const limit = vehicle.qty - vehicle.booked;
@@ -382,7 +401,7 @@ export default function VehicleDetail({route, navigation}) {
       {Object.keys(vehicle).length > 0 && (
         <SafeAreaView>
           <ScrollView>
-            <Stack style={styles.headerWrapper}>
+            <Stack key={1} style={styles.headerWrapper}>
               <View style={styles.imageWrapper}>
                 <Image
                   source={
@@ -407,7 +426,7 @@ export default function VehicleDetail({route, navigation}) {
               </View>
             </Stack>
 
-            <Stack style={globalStyle.container}>
+            <Stack key={2} style={globalStyle.container}>
               <Box style={[styles.detailHeadWrapper]}>
                 <Box>
                   <Text style={styles.textPricing}>
@@ -448,7 +467,7 @@ export default function VehicleDetail({route, navigation}) {
               </Box>
 
               {user?.role.includes('admin') ? (
-                <>
+                <Box>
                   <Box style={styles.counterSection}>
                     <Text style={styles.counterText}>Stocks</Text>
                     <Box style={styles.counterWrapper}>
@@ -476,9 +495,9 @@ export default function VehicleDetail({route, navigation}) {
                     styleContainer={styles.reservationBtn}>
                     Edit Item
                   </CustomButton>
-                </>
+                </Box>
               ) : (
-                <>
+                <Box>
                   <Box style={styles.counterSection}>
                     <Text style={styles.counterText}>Select vehicles</Text>
                     <Box style={styles.counterWrapper}>
@@ -525,7 +544,7 @@ export default function VehicleDetail({route, navigation}) {
                     styleContainer={styles.reservationBtn}>
                     Reservation
                   </CustomButton>
-                </>
+                </Box>
               )}
             </Stack>
           </ScrollView>
