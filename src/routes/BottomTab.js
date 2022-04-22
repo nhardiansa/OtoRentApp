@@ -11,6 +11,7 @@ import {
   SEARCH_STACK,
   HISTORY_SCREEN,
   PROFILE_STACK,
+  HOME_TAB,
 } from '../helpers/destinationConstants';
 import {colors} from '../helpers/styleConstants';
 import HomeTab from './HomeTab';
@@ -33,9 +34,9 @@ export default function BottomTab({navigation}) {
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
       }}
-      initialRouteName={HOME_SCREEN}>
+      initialRouteName={HOME_TAB}>
       <BottomStack.Screen
-        name="HomeTab"
+        name={HOME_TAB}
         component={HomeTab}
         options={{
           tabBarIcon: ({color, size}) => (

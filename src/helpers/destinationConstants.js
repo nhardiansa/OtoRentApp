@@ -4,6 +4,7 @@ export const FORGOT_PASSWORD_SCREEN = 'forgotPassword';
 export const VERIFY_USER_SCREEN = 'verifyUser';
 
 export const HOME_SCREEN = 'home';
+export const HOME_TAB = 'HomeTab';
 export const VIEW_MORE_SCREEN = 'viewMore';
 
 export const FILTER_SCREEN = 'filter';

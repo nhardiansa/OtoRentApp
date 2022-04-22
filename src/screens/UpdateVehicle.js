@@ -24,6 +24,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   BOTTOM_TAB,
   HOME_SCREEN,
+  HOME_TAB,
   VEHICLE_DETAIL,
 } from '../helpers/destinationConstants';
 import {
@@ -43,7 +44,10 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import CustomButton from '../components/CustomButton';
 import {blobFetch} from '../helpers/http';
 import LoadingScreen from '../components/LoadingScreen';
-import {getVehicleDetail} from '../redux/actions/vehicleActions';
+import {
+  getVehicleDetail,
+  clearVehicleDetail,
+} from '../redux/actions/vehicleActions';
 
 export default function UpdateVehicle({navigation}) {
   const toast = useToast();
@@ -67,8 +71,11 @@ export default function UpdateVehicle({navigation}) {
 
   useEffect(() => {
     if (Object.keys(vehicle).length < 1) {
-      navigation.navigate(BOTTOM_TAB, {
-        screen: HOME_SCREEN,
+      navigation.replace(BOTTOM_TAB, {
+        screen: HOME_TAB,
+        params: {
+          screen: HOME_SCREEN,
+        },
       });
     }
 
@@ -421,6 +428,83 @@ export default function UpdateVehicle({navigation}) {
     }
   };
 
+  const onDeleteHandler = async () => {
+    try {
+      setIsLoading(true);
+
+      const result = await blobFetch(
+        'DELETE',
+        `vehicles/${vehicle.id}`,
+        null,
+        auth.token,
+      );
+
+      const response = await JSON.parse(result.data);
+
+      console.log(response);
+
+      if (response.success) {
+        const id = 'delete_success';
+        if (!toast.isActive(id)) {
+          toast.show({
+            id,
+            render: () => (
+              <Box bg="success.600" px="2" py="1" rounded="sm" mb={5}>
+                <NVText
+                  color="white"
+                  fontSize="md"
+                  fontFamily={fontStyle(fontFamily.primary)}>
+                  {response.message}
+                </NVText>
+              </Box>
+            ),
+          });
+        }
+      } else {
+        const id = 'delete_error';
+        toast.show({
+          id,
+          render: () => (
+            <Box bg="error.500" px="2" py="1" rounded="sm" mb={5}>
+              <NVText
+                color="white"
+                fontSize="md"
+                fontFamily={fontStyle(fontFamily.primary)}>
+                {response.message}
+              </NVText>
+            </Box>
+          ),
+        });
+      }
+
+      dispatch(clearVehicleDetail());
+
+      setIsLoading(false);
+    } catch (err) {
+      console.error(err.response ? err.response : err);
+      const message = await (err.response
+        ? JSON.parse(err.response.data.message)
+        : err.message);
+      id = 'delete_item_error';
+      if (!toast.isActive(id)) {
+        toast.show({
+          id,
+          render: () => (
+            <Box bg="error.500" px="2" py="1" rounded="sm" mb={5}>
+              <NVText
+                color="white"
+                fontSize="md"
+                fontFamily={fontStyle(fontFamily.primary)}>
+                {message}
+              </NVText>
+            </Box>
+          ),
+        });
+      }
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       {isLoading || loadingRedux ? (
@@ -510,7 +594,9 @@ export default function UpdateVehicle({navigation}) {
                 />
               </Box>
               <Box style={styles.heartIconWrapper} pr="4">
-                <FAIcon name="trash" style={styles.heartIcon} />
+                <Pressable onPress={onDeleteHandler}>
+                  <FAIcon name="trash" style={styles.heartIcon} />
+                </Pressable>
               </Box>
             </Box>
             <Box style={styles.descWrapper}>
