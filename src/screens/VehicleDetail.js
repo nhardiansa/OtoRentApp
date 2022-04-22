@@ -24,7 +24,12 @@ import {
 } from '../helpers/styleConstants';
 import {Box, ScrollView, Stack, useToast, Text as NVText} from 'native-base';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
-import {PAYMENT_STACK, SEARCH_SCREEN} from '../helpers/destinationConstants';
+import {
+  ADMIN_STACK,
+  EDIT_ITEM_SCREEN,
+  PAYMENT_STACK,
+  SEARCH_SCREEN,
+} from '../helpers/destinationConstants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   clearVehicleDetail,
@@ -42,8 +47,9 @@ const dateOptions = {
 
 export default function VehicleDetail({route, navigation}) {
   const dispatch = useDispatch();
-  const {vehiclesReducer} = useSelector(state => state);
+  const {vehiclesReducer, userReducer} = useSelector(state => state);
   const {vehicle, query} = vehiclesReducer;
+  const {profile: user} = userReducer;
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -60,10 +66,10 @@ export default function VehicleDetail({route, navigation}) {
   const [countRent, setCountRent] = useState(0);
 
   useEffect(() => {
-    // if (!vehicleId) {
-    //   navigation.goBack();
-    //   return;
-    // }
+    if (!vehicle.id) {
+      navigation.goBack();
+      return;
+    }
 
     // dispatch(getVehicleDetail());
     if (Object.keys(vehicle).length < 1) {
@@ -215,6 +221,10 @@ export default function VehicleDetail({route, navigation}) {
     dispatch(setDataToSend(tempData));
 
     navigation.push(PAYMENT_STACK);
+  };
+
+  const changeStockHandler = type => {
+    console.log(type);
   };
 
   const styles = StyleSheet.create({
@@ -437,52 +447,86 @@ export default function VehicleDetail({route, navigation}) {
                 </Text>
               </Box>
 
-              <Box style={styles.counterSection}>
-                <Text style={styles.counterText}>Select vehicles</Text>
-                <Box style={styles.counterWrapper}>
-                  <TouchableHighlight
-                    onPress={decreaseItem}
-                    underlayColor={colors.primaryDark}
-                    style={styles.counterBtn}>
-                    <FAIcon name="minus" style={styles.counterIcon} />
-                  </TouchableHighlight>
-                  <Text style={styles.countNumber}>{countRent}</Text>
-                  <TouchableHighlight
-                    onPress={increaseItem}
-                    underlayColor={colors.primaryDark}
-                    style={styles.counterBtn}>
-                    <FAIcon name="plus" style={styles.counterIcon} />
-                  </TouchableHighlight>
-                </Box>
-              </Box>
+              {user?.role.includes('admin') ? (
+                <>
+                  <Box style={styles.counterSection}>
+                    <Text style={styles.counterText}>Stocks</Text>
+                    <Box style={styles.counterWrapper}>
+                      <TouchableHighlight
+                        onPress={() => changeStockHandler('minus')}
+                        underlayColor={colors.primaryDark}
+                        style={styles.counterBtn}>
+                        <FAIcon name="minus" style={styles.counterIcon} />
+                      </TouchableHighlight>
+                      <Text style={styles.countNumber}>{countRent}</Text>
+                      <TouchableHighlight
+                        onPress={() => changeStockHandler('plus')}
+                        underlayColor={colors.primaryDark}
+                        style={styles.counterBtn}>
+                        <FAIcon name="plus" style={styles.counterIcon} />
+                      </TouchableHighlight>
+                    </Box>
+                  </Box>
+                  <CustomButton
+                    onPress={() =>
+                      navigation.navigate(ADMIN_STACK, {
+                        screen: EDIT_ITEM_SCREEN,
+                      })
+                    }
+                    styleContainer={styles.reservationBtn}>
+                    Edit Item
+                  </CustomButton>
+                </>
+              ) : (
+                <>
+                  <Box style={styles.counterSection}>
+                    <Text style={styles.counterText}>Select vehicles</Text>
+                    <Box style={styles.counterWrapper}>
+                      <TouchableHighlight
+                        onPress={decreaseItem}
+                        underlayColor={colors.primaryDark}
+                        style={styles.counterBtn}>
+                        <FAIcon name="minus" style={styles.counterIcon} />
+                      </TouchableHighlight>
+                      <Text style={styles.countNumber}>{countRent}</Text>
+                      <TouchableHighlight
+                        onPress={increaseItem}
+                        underlayColor={colors.primaryDark}
+                        style={styles.counterBtn}>
+                        <FAIcon name="plus" style={styles.counterIcon} />
+                      </TouchableHighlight>
+                    </Box>
+                  </Box>
 
-              <Box style={styles.datePickerWrapper}>
-                <TouchableHighlight
-                  style={styles.datePicker}
-                  underlayColor="rgba(0,0,0,0.2)"
-                  onPress={showMode}>
-                  <Text>
-                    {dateChanged
-                      ? `${moment(date).format('DD MMMM YYYY')}`
-                      : 'Select date'}
-                  </Text>
-                </TouchableHighlight>
-                <Box style={styles.countDay}>
-                  <TextInput
-                    style={styles.countInput}
-                    onChangeText={countDayChange}
-                    keyboardType="number-pad"
-                    value={countDay.toString()}
-                    placeholder="0"
-                  />
-                  <Text style={styles.placeholder}>Day</Text>
-                </Box>
-              </Box>
-              <CustomButton
-                onPress={doReservation}
-                styleContainer={styles.reservationBtn}>
-                Reservation
-              </CustomButton>
+                  <Box style={styles.datePickerWrapper}>
+                    <TouchableHighlight
+                      style={styles.datePicker}
+                      underlayColor="rgba(0,0,0,0.2)"
+                      onPress={showMode}>
+                      <Text>
+                        {dateChanged
+                          ? `${moment(date).format('DD MMMM YYYY')}`
+                          : 'Select date'}
+                      </Text>
+                    </TouchableHighlight>
+                    <Box style={styles.countDay}>
+                      <TextInput
+                        style={styles.countInput}
+                        onChangeText={countDayChange}
+                        keyboardType="number-pad"
+                        value={countDay.toString()}
+                        placeholder="0"
+                      />
+                      <Text style={styles.placeholder}>Day</Text>
+                    </Box>
+                  </Box>
+                  <CustomButton
+                    onPress={doReservation}
+                    styleContainer={styles.reservationBtn}>
+                    Reservation
+                  </CustomButton>
+                </>
+              )}
             </Stack>
           </ScrollView>
         </SafeAreaView>
