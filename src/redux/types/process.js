@@ -1,0 +1,2 @@
+export const PROCESS_LOADING = 'PROCESS_LOADING';
+export const PROCESS_ERROR = 'PROCESS_ERROR';
