@@ -1,4 +1,4 @@
-package com.vehicelrentapp;
+package com.nabil.otorentapp;
 
 import com.facebook.react.ReactActivity;
 import android.os.Bundle;
