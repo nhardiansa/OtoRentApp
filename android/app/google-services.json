@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "190386484383",
+    "project_id": "oto-rent-app",
+    "storage_bucket": "oto-rent-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190386484383:android:1cec95b7e6246efc699eaa",
+        "android_client_info": {
+          "package_name": "com.nabil.otorentapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "190386484383-95d2d8ldu25k4vchj7m5n826eb8n5ch1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nabil.otorentapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "190386484383-1brsbk6360rb3ch5btbdsmkj7inn6vu3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9KSJcL3ba4C3rI8eRUBCEEj5wqoFVwNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "190386484383-1brsbk6360rb3ch5btbdsmkj7inn6vu3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
