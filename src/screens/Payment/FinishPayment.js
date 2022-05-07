@@ -1,5 +1,5 @@
 import {} from 'react-native';
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import {Box, Divider, ScrollView, Text, useToast} from 'native-base';
 import Stepper from '../../components/Stepper';
 import {colors, fontFamily, fontStyle} from '../../helpers/styleConstants';
@@ -7,7 +7,6 @@ import CustomButton from '../../components/CustomButton';
 import {capitalize, priceFormat} from '../../helpers/formatter';
 import BackSection from '../../components/BackSection';
 import {useDispatch, useSelector} from 'react-redux';
-import {axiosInstance} from '../../helpers/http';
 import moment from 'moment';
 import {
   BOTTOM_TAB,
