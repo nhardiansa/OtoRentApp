@@ -97,14 +97,14 @@ export default function Profile({navigation}) {
       text: 'Help',
       action: pressed,
     },
-    {
-      text: 'Remote notification',
-      action: remoteNotificationHandler,
-    },
-    {
-      text: 'Local notification',
-      action: localNotificationHandler,
-    },
+    // {
+    //   text: 'Remote notification',
+    //   action: remoteNotificationHandler,
+    // },
+    // {
+    //   text: 'Local notification',
+    //   action: localNotificationHandler,
+    // },
     {
       text: 'Update Profile',
       action: goToUpdateProfile,
