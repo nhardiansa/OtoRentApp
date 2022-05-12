@@ -201,6 +201,7 @@ export default function History({navigation}) {
       }
 
       setHistories([...histories, ...data.results]);
+      setPageInfo(data.pageInfo);
 
       setIsLoading(false);
     } catch (err) {
@@ -280,21 +281,27 @@ export default function History({navigation}) {
             data={histories}
             onRefresh={() => setDoRefresh(true)}
             refreshing={doRefresh}
-            ListFooterComponent={() => (
-              <>
-                {pageInfo.nextPage && (
-                  <Box px="5" mb="5">
-                    <Button bgColor="warning.500" onPress={loadMore}>
-                      <Text
-                        fontFamily={fontStyle(fontFamily.primary, 'bold')}
-                        color="white">
-                        Load More
-                      </Text>
-                    </Button>
-                  </Box>
-                )}
-              </>
-            )}
+            onEndReached={() => {
+              if (pageInfo.nextPage) {
+                loadMore();
+              }
+            }}
+            onEndReachedThreshold={0.5}
+            // ListFooterComponent={() => (
+            //   <>
+            //     {pageInfo.nextPage && (
+            //       <Box px="5" mb="5">
+            //         <Button bgColor="warning.500" onPress={loadMore}>
+            //           <Text
+            //             fontFamily={fontStyle(fontFamily.primary, 'bold')}
+            //             color="white">
+            //             Load More
+            //           </Text>
+            //         </Button>
+            //       </Box>
+            //     )}
+            //   </>
+            // )}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item}) => (

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {TouchableHighlight} from 'react-native';
 import {Box, Button, Image, Modal, Text} from 'native-base';
+import PushNotification from 'react-native-push-notification';
 
 import {PROFILE_PLACEHOLDER} from '../../assets/images';
 import {fontFamily, fontStyle} from '../../helpers/styleConstants';
@@ -24,6 +25,15 @@ export default function Profile({navigation}) {
 
   useEffect(() => {
     console.log(profilePlaceholder);
+
+    PushNotification.createChannel({
+      channelId: 'test-channel-id',
+      channelName: 'test-channel',
+    });
+
+    PushNotification.getChannels(channels => {
+      console.log(channels);
+    });
 
     if (errorImage) {
       setProfilePlaceholder(PROFILE_PLACEHOLDER);
@@ -62,6 +72,45 @@ export default function Profile({navigation}) {
     setErrorImage(true);
   };
 
+  const remoteNotificationHandler = async () => {
+    console.log('remote notification');
+  };
+
+  const localNotificationHandler = () => {
+    PushNotification.localNotification({
+      channelId: 'test-channel-id',
+      message: 'ngetest doang',
+      title: 'Test',
+    });
+  };
+
+  const btnAction = [
+    {
+      text: 'Your Favorites',
+      action: pressed,
+    },
+    {
+      text: 'FAQ',
+      action: pressed,
+    },
+    {
+      text: 'Help',
+      action: pressed,
+    },
+    // {
+    //   text: 'Remote notification',
+    //   action: remoteNotificationHandler,
+    // },
+    // {
+    //   text: 'Local notification',
+    //   action: localNotificationHandler,
+    // },
+    {
+      text: 'Update Profile',
+      action: goToUpdateProfile,
+    },
+  ];
+
   return (
     <>
       <Box flex={1}>
@@ -90,74 +139,26 @@ export default function Profile({navigation}) {
         <Box h="4/5" justifyContent="space-between">
           <Box>
             <Box>
-              <TouchableHighlight
-                onPress={pressed}
-                underlayColor="rgba(0,0,0,0.2)">
-                <Box
-                  px="5"
-                  py="6"
-                  flexDir="row"
-                  alignItems="center"
-                  justifyContent="space-between">
-                  <Text
-                    fontSize="xl"
-                    fontFamily={fontStyle(fontFamily.primary, 'semiBold')}>
-                    Your Favorites
-                  </Text>
-                  <FAIcon name="chevron-right" size={16} />
-                </Box>
-              </TouchableHighlight>
-              <TouchableHighlight
-                onPress={pressed}
-                underlayColor="rgba(0,0,0,0.2)">
-                <Box
-                  px="5"
-                  py="6"
-                  flexDir="row"
-                  alignItems="center"
-                  justifyContent="space-between">
-                  <Text
-                    fontSize="xl"
-                    fontFamily={fontStyle(fontFamily.primary, 'semiBold')}>
-                    FAQ
-                  </Text>
-                  <FAIcon name="chevron-right" size={16} />
-                </Box>
-              </TouchableHighlight>
-              <TouchableHighlight
-                onPress={pressed}
-                underlayColor="rgba(0,0,0,0.2)">
-                <Box
-                  px="5"
-                  py="6"
-                  flexDir="row"
-                  alignItems="center"
-                  justifyContent="space-between">
-                  <Text
-                    fontSize="xl"
-                    fontFamily={fontStyle(fontFamily.primary, 'semiBold')}>
-                    Help
-                  </Text>
-                  <FAIcon name="chevron-right" size={16} />
-                </Box>
-              </TouchableHighlight>
-              <TouchableHighlight
-                onPress={goToUpdateProfile}
-                underlayColor="rgba(0,0,0,0.2)">
-                <Box
-                  px="5"
-                  py="6"
-                  flexDir="row"
-                  alignItems="center"
-                  justifyContent="space-between">
-                  <Text
-                    fontSize="xl"
-                    fontFamily={fontStyle(fontFamily.primary, 'semiBold')}>
-                    Update Profile
-                  </Text>
-                  <FAIcon name="chevron-right" size={16} />
-                </Box>
-              </TouchableHighlight>
+              {btnAction.map((btn, index) => (
+                <TouchableHighlight
+                  key={index}
+                  onPress={btn.action}
+                  underlayColor="rgba(0,0,0,0.2)">
+                  <Box
+                    px="5"
+                    py="6"
+                    flexDir="row"
+                    alignItems="center"
+                    justifyContent="space-between">
+                    <Text
+                      fontSize="xl"
+                      fontFamily={fontStyle(fontFamily.primary, 'semiBold')}>
+                      {btn.text}
+                    </Text>
+                    <FAIcon name="chevron-right" size={16} />
+                  </Box>
+                </TouchableHighlight>
+              ))}
             </Box>
           </Box>
           <Box px="5">

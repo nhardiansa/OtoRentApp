@@ -22,7 +22,10 @@ import {colors, fontFamily, fontStyle} from '../../helpers/styleConstants';
 import {normalizeUrl} from '../../helpers/formatter';
 import moment from 'moment';
 import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
-import {launchImageLibrary as ImagePicker} from 'react-native-image-picker';
+import {
+  launchImageLibrary as ImagePicker,
+  launchCamera as pickImageByCamera,
+} from 'react-native-image-picker';
 import {useEffect} from 'react';
 import RNFetchBlob from 'rn-fetch-blob';
 import {updateUserProfile} from '../../redux/actions/userActions';
@@ -162,9 +165,14 @@ export default function UpdateProfile({navigation}) {
     }
   };
 
-  const showImagePicker = async () => {
+  const showImagePicker = async (useCamera = false) => {
     try {
-      const response = await ImagePicker({});
+      let response;
+      if (useCamera) {
+        response = await pickImageByCamera({});
+      } else {
+        response = await ImagePicker({});
+      }
       if (response.didCancel) {
         return false;
       }
@@ -308,16 +316,52 @@ export default function UpdateProfile({navigation}) {
                   rounded="full"
                   alt="profileImage"
                 />
-                <Pressable
-                  onPress={showImagePicker}
+                {/* <Pressable
+                  onPress={() => showImagePicker(false)}
                   position="absolute"
                   bottom="0"
                   right="0">
                   <Box bgColor="warning.500" p="3" rounded="full">
                     <FIcon color={colors.white} name="edit-2" size={20} />
                   </Box>
-                </Pressable>
+                </Pressable> */}
               </Box>
+              <Button
+                mt="4"
+                px="5"
+                borderRadius="xl"
+                bgColor="muted.600"
+                onPress={() => showImagePicker(true)}
+                w="3/5">
+                <Box flexDir="row" alignItems="center">
+                  <FIcon name="camera" size={30} color={colors.white} />
+                  <Text
+                    ml="2.5"
+                    color="white"
+                    fontFamily={fontStyle(fontFamily.primary, 'bold')}
+                    fontSize="lg">
+                    Take photo
+                  </Text>
+                </Box>
+              </Button>
+              <Button
+                my="3"
+                px="5"
+                borderRadius="xl"
+                bgColor="warning.600"
+                onPress={() => showImagePicker(false)}
+                w="3/5">
+                <Box flexDir="row" alignItems="center">
+                  <FIcon name="upload" size={30} color={colors.white} />
+                  <Text
+                    ml="2.5"
+                    color="white"
+                    fontFamily={fontStyle(fontFamily.primary, 'bold')}
+                    fontSize="lg">
+                    Upload photo
+                  </Text>
+                </Box>
+              </Button>
             </Box>
             <Box alignItems="center" mt="5">
               <Radio.Group

@@ -1,5 +1,5 @@
 import {} from 'react-native';
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import {Box, Divider, ScrollView, Text, useToast} from 'native-base';
 import Stepper from '../../components/Stepper';
 import {colors, fontFamily, fontStyle} from '../../helpers/styleConstants';
@@ -7,7 +7,6 @@ import CustomButton from '../../components/CustomButton';
 import {capitalize, priceFormat} from '../../helpers/formatter';
 import BackSection from '../../components/BackSection';
 import {useDispatch, useSelector} from 'react-redux';
-import {axiosInstance} from '../../helpers/http';
 import moment from 'moment';
 import {
   BOTTOM_TAB,
@@ -15,6 +14,9 @@ import {
   PAYMENT_DETAIL,
 } from '../../helpers/destinationConstants';
 import {payTransaction} from '../../redux/actions/transactionActions';
+import PushNotification from 'react-native-push-notification';
+
+const paymentChannelId = 'payment_channel_id';
 
 export default function FinishPayment({navigation}) {
   useLayoutEffect(() => {
@@ -33,7 +35,9 @@ export default function FinishPayment({navigation}) {
   }, [navigation]);
 
   const dispatch = useDispatch();
-  const {transactionReducer, authReducer, vehiclesReducer} = useSelector(state => state);
+  const {transactionReducer, authReducer, vehiclesReducer} = useSelector(
+    state => state,
+  );
   const {
     payment_code,
     start_rent,
@@ -55,12 +59,23 @@ export default function FinishPayment({navigation}) {
   // const [error, setError] = useState('');
 
   useEffect(() => {
+    PushNotification.createChannel({
+      channelId: paymentChannelId,
+      channelName: 'payment_succes_channel',
+    });
+
     if (!transactionReducer.details) {
       navigation.goBack();
       return;
     }
 
     if (Number(transactionReducer.details.payment)) {
+      PushNotification.localNotification({
+        channelId: paymentChannelId,
+        message: 'Payment is successful, now you can use the vehicle',
+        title: 'Payment successful',
+        largeIcon: 'ic_launcher',
+      });
       navigation.navigate(PAYMENT_DETAIL);
     }
   }, [transactionReducer.details]);
@@ -222,17 +237,19 @@ export default function FinishPayment({navigation}) {
               fontSize="md"
               fontFamily={fontStyle(fontFamily.primary)}>
               Order details : {'\n'}
-              {qty} {capitalize(vehicleDetails.name)}{' '}
-              {'\n'}
+              {qty} {capitalize(vehicleDetails.name)} {'\n'}
               {prepayment
                 ? `Prepayment ${priceFormat(prepayment)}`
                 : 'No Prepayment'}
               {'\n'}
               {(Date.parse(end_rent) - Date.parse(start_rent)) /
                 (1000 * 60 * 60 * 24)}{' '}
-              {
-                ((Date.parse(end_rent) - Date.parse(start_rent)) / (1000 * 60 * 60 * 24)) > 1 ? 'days' : 'day'
-              } {'\n'}
+              {(Date.parse(end_rent) - Date.parse(start_rent)) /
+                (1000 * 60 * 60 * 24) >
+              1
+                ? 'days'
+                : 'day'}{' '}
+              {'\n'}
               {moment(start_rent).format('MMM DD') +
                 ' to ' +
                 moment(end_rent).format('MMM DD YYYY')}

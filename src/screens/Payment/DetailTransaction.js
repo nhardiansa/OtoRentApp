@@ -64,7 +64,7 @@ export default function DetailTransaction({navigation}) {
     id: transactionId,
     returned: isReturned,
     // payment: paymentStatus,
-  } = transactionReducer.details;
+  } = transactionReducer?.details;
   // const {name: userName, email, phone, address} = userReducer.profile;
   const {name: userName, email, phone, role} = userReducer.profile;
 
