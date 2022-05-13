@@ -32,6 +32,7 @@ import {
 
 export default function SearchResult({navigation}) {
   const [search, setSearch] = useState('');
+  const [doRefresh, setDoRefresh] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -51,8 +52,14 @@ export default function SearchResult({navigation}) {
   } = useSelector(state => state.vehiclesReducer);
 
   useEffect(() => {
-    dispatch(setVehicleList(query));
-  }, []);
+    if (!doRefresh) {
+      dispatch(setVehicleList(query));
+    }
+
+    if (doRefresh) {
+      setDoRefresh(false);
+    }
+  }, [doRefresh]);
 
   useEffect(() => {
     if (vehicle.id) {
@@ -160,24 +167,32 @@ export default function SearchResult({navigation}) {
               {data.length > 0 ? (
                 <FlatList
                   mt={5}
+                  onRefresh={() => setDoRefresh(true)}
+                  refreshing={doRefresh}
                   contentContainerStyle={styles.listContainer}
-                  ListFooterComponent={
-                    pageInfo.nextPage && (
-                      <Button
-                        onPress={loadMoreHandler}
-                        py="3"
-                        bgColor="warning.500"
-                        rounded="lg"
-                        isLoading={loadMoreLoading}>
-                        <Text
-                          color="white"
-                          fontSize="md"
-                          fontFamily={fontStyle(fontFamily.primary, 'bold')}>
-                          Load More
-                        </Text>
-                      </Button>
-                    )
-                  }
+                  onEndReached={() => {
+                    if (pageInfo.nextPage) {
+                      loadMoreHandler();
+                    }
+                  }}
+                  onEndReachedThreshold={0.5}
+                  // ListFooterComponent={
+                  //   pageInfo.nextPage && (
+                  //     <Button
+                  //       onPress={loadMoreHandler}
+                  //       py="3"
+                  //       bgColor="warning.500"
+                  //       rounded="lg"
+                  //       isLoading={loadMoreLoading}>
+                  //       <Text
+                  //         color="white"
+                  //         fontSize="md"
+                  //         fontFamily={fontStyle(fontFamily.primary, 'bold')}>
+                  //         Load More
+                  //       </Text>
+                  //     </Button>
+                  //   )
+                  // }
                   data={data}
                   renderItem={({item}) => {
                     console.log(item.type);
